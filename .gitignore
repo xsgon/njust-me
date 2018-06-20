@@ -1,0 +1,13 @@
+.DS_Store
+.idea
+out/*
+tmp/*
+ant-out/*
+*.iml
+*.o
+*.d
+*.dll
+*.a
+*.ver
+ffmpeg-3.0/doc/*
+archive/*
