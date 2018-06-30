@@ -1,7 +1,7 @@
 package com.njust.controller;
 
-import com.njust.mapper.UserMapper;
 import com.njust.model.response.ErrorCode;
+import com.njust.repo.UsersRepo;
 import com.njust.vo.UserVo;
 import io.swagger.annotations.*;
 
@@ -29,10 +29,8 @@ This is a dummy rest controller, for the purpose of documentation (/session) pat
 @Slf4j
 public class SessionController {
 
-//    @Autowired
-//    private UserRepo userRepo;
     @Autowired
-    private UserMapper userMapper;
+    private UsersRepo usersRepo;
 
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Will return a security token, which must be passed in every request", response = SessionResponse.class)})
     @RequestMapping(value = "/session", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -41,7 +39,7 @@ public class SessionController {
 //        UserMapper user = userRepo.findOneByUserIdAndPassword(login.getUsername(), login.getPassword()).orElse(null);
         log.error("received /session request");
         // 从数据库里得到
-        UserVo user = userMapper.getUserById(login.getUsername());
+        UserVo user = usersRepo.findById(login.getUsername());
 
         SessionResponse resp = new SessionResponse();
         SessionItem sessionItem = new SessionItem();

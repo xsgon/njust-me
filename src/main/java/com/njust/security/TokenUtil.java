@@ -3,7 +3,6 @@ package com.njust.security;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.njust.model.user.Role;
 import com.njust.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -82,7 +81,7 @@ public class TokenUtil {
 
         UserVo user = new UserVo();
         user.setId((String) claims.get("userId"));
-        user.setRole(Role.valueOf((String) claims.get("role")));
+        user.setRole((String) claims.get("role"));
         if (user.getId() != null && user.getRole() != null) {
             return new TokenUser(user);
         } else {
@@ -99,7 +98,7 @@ public class TokenUtil {
             .setExpiration(new Date(System.currentTimeMillis() + VALIDITY_TIME_MS))
 //            .setSubject(user.getFullName())
             .claim("userId", user.getId())
-            .claim("role", user.getRole().toString())
+            .claim("role", user.getRole())
             .claim("active", user.getActive())
             .signWith(SignatureAlgorithm.HS256, secret)
             .compact();

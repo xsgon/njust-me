@@ -1,6 +1,6 @@
 package com.njust.security;
 
-import com.njust.mapper.UserMapper;
+import com.njust.repo.UsersRepo;
 import com.njust.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +13,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
-//    @Autowired
-//    private UserRepo userRepo;
     @Autowired
-    private UserMapper userMapper;
+    private UsersRepo usersRepo;
 
     private final AccountStatusUserDetailsChecker detailsChecker = new AccountStatusUserDetailsChecker();
 
@@ -25,8 +23,10 @@ public class UserDetailsService implements org.springframework.security.core.use
         log.info("auth user " + username + " with database info");
 
 //        final UserMapper user = userRepo.findOneByUserId(username).orElseThrow(() -> new UsernameNotFoundException("UserMapper not found"));
-        // 从数据库里取出用户信息:todo
-        UserVo user = userMapper.getUserById(username);
+        //UserVo userVo = usersRepo.findOne(username);
+//        log.info("usersVo is " + usersRepo.findById(username));
+        // 从数据库里取出用户信息
+        UserVo user = usersRepo.findById(username);
 //        log.info("fetch database info success");
         if (user == null) {
             throw new UsernameNotFoundException("User not found");

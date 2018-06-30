@@ -10,6 +10,6 @@ public class SessionItem {
     private String  token;
     private String  userId;
     private String  email;
-    private Role role;
+    private String role;
 //    private List<String> roles;
 }

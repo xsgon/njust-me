@@ -11,3 +11,4 @@ ant-out/*
 *.ver
 ffmpeg-3.0/doc/*
 archive/*
+target

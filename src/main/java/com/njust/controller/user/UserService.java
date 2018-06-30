@@ -1,6 +1,6 @@
 package com.njust.controller.user;
 
-import com.njust.mapper.UserMapper;
+import com.njust.repo.UsersRepo;
 import com.njust.vo.UserVo;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class UserService {
 
     @Autowired
-    private UserMapper userMapper;
+    private UsersRepo usersRepo;
 
 	public String getLoggedInUserId(){
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -28,14 +28,15 @@ public class UserService {
 	}
 
 	public UserVo getUserInfoByUserId(String userId){
-			return userMapper.getUserById(userId);
+			return usersRepo.findById(userId);
 	}
 
 
 	public boolean addNewUser(UserVo user) {
-		UserVo oldUser = this.getUserInfoByUserId(user.getId());
+        UserVo oldUser = this.getUserInfoByUserId(user.getId());
 		if (oldUser == null){
-			return userMapper.insertUser(user) == 1;
+		    usersRepo.insert(user);
+//			return userMapper.insertUser(user) == 1;
 		}
 
 		return true;

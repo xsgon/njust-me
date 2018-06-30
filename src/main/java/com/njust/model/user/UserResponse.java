@@ -1,7 +1,6 @@
 package com.njust.model.user;
 
 import com.njust.vo.UserVo;
-import io.swagger.annotations.*;
 import lombok.*;
 import com.njust.model.response.*;
 
