@@ -1,6 +1,7 @@
 package com.njust.security;
 
 import com.njust.model.response.ErrorCode;
+import com.njust.model.response.OperationResponse;
 import org.apache.commons.io.IOUtils;
 import org.springframework.security.core.*;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -70,21 +71,11 @@ public class SessionFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication authToken) throws IOException, ServletException {
         SecurityContextHolder.getContext().setAuthentication(authToken);
-        /*
-        JSONObject jsonResp = new JSONObject();
-        TokenUser tokenUser = (TokenUser)authToken.getPrincipal();
-        String newToken = this.tokenUtil.createTokenForUser(tokenUser);
 
-        jsonResp.put("token",newToken);
-        jsonResp.put("firstName",tokenUser.getUser().getFirstName());
-        jsonResp.put("lastName",tokenUser.getUser().getLastName());
-        jsonResp.put("email",tokenUser.getUser().getEmail());
-        jsonResp.put("role",tokenUser.getRole());
-        */
         log.info("Login Success");
 
         TokenUser tokenUser = (TokenUser) authToken.getPrincipal();
-        SessionResponse resp = new SessionResponse();
+        OperationResponse resp = new OperationResponse();
         SessionItem respItem = new SessionItem();
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String tokenString = this.tokenUtil.createTokenForUser(tokenUser);
@@ -95,7 +86,7 @@ public class SessionFilter extends AbstractAuthenticationProcessingFilter {
 
         resp.setCode(ErrorCode.CODE_SUCCESS);
         resp.setMessage("Login Success");
-        resp.setItem(respItem);
+        resp.setBody(respItem);
         String jsonRespString = ow.writeValueAsString(resp);
 
         res.setStatus(HttpServletResponse.SC_OK);

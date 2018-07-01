@@ -11,7 +11,7 @@ public class MongoDbSettings {
     @Bean
     public MongoClientOptions mongoOptions() {
         return MongoClientOptions.builder()
-                .socketTimeout(2000)
+                .socketTimeout(5000)
                 .minHeartbeatFrequency(1000)
                 .heartbeatSocketTimeout(3000)
                 .connectTimeout(30)

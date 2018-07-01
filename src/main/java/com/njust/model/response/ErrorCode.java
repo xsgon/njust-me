@@ -25,6 +25,9 @@ public class ErrorCode {
     public static final int CODE_UPDATE_USER_FAILED = 10004;
     public static final String MSG_UPDATE_USER_FAILED = "更新用户失败，请重试";
 
+    public static final int CODE_DB_SOCKET_TIME_OUT = 20001;
+    public static final String MSG_DB_SOCKET_TIME_OUT = "数据库socket连接异常，请重试";
+
 
 
 //    public final int CODE_SUCCESS = 200;

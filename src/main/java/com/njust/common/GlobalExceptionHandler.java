@@ -1,5 +1,6 @@
 package com.njust.common;
 
+import com.mongodb.MongoSocketReadTimeoutException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,6 +30,9 @@ public class GlobalExceptionHandler {
         if (e instanceof AccessDeniedException) {
             resp.setCode(ErrorCode.CODE_ACCESS_DENY);
             resp.setMessage(ErrorCode.MSG_ACCESS_DENY);
+        } else if (e instanceof MongoSocketReadTimeoutException) {
+            resp.setCode(ErrorCode.CODE_DB_SOCKET_TIME_OUT);
+            resp.setMessage(ErrorCode.MSG_DB_SOCKET_TIME_OUT);
         } else {
             resp.setCode(ErrorCode.CODE_SYSTEM_ERROR);
             resp.setMessage(e.getMessage());

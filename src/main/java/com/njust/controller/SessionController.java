@@ -1,6 +1,7 @@
 package com.njust.controller;
 
 import com.njust.model.response.ErrorCode;
+import com.njust.model.response.OperationResponse;
 import com.njust.repo.UsersRepo;
 import com.njust.vo.UserVo;
 import io.swagger.annotations.*;
@@ -32,41 +33,41 @@ public class SessionController {
     @Autowired
     private UsersRepo usersRepo;
 
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Will return a security token, which must be passed in every request", response = SessionResponse.class)})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Will return a security token, which must be passed in every request", response = OperationResponse.class)})
     @RequestMapping(value = "/session", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public SessionResponse newSession(@RequestBody Login login, HttpServletRequest request, HttpServletResponse response) {
+    public OperationResponse newSession(@RequestBody Login login, HttpServletRequest request, HttpServletResponse response) {
 //        UserMapper user = userRepo.findOneByUserIdAndPassword(login.getUsername(), login.getPassword()).orElse(null);
         log.error("received /session request");
-        // 从数据库里得到
-        UserVo user = usersRepo.findById(login.getUsername());
-
-        SessionResponse resp = new SessionResponse();
-        SessionItem sessionItem = new SessionItem();
-        if (user != null) {
-            sessionItem.setToken("xxx.xxx.xxx");
-            sessionItem.setUserId(user.getId());
-            sessionItem.setEmail(user.getEmail());
-            sessionItem.setRole(user.getRole());
-
-            resp.setCode(ErrorCode.CODE_SUCCESS);
-            resp.setMessage("Dummy Login Success");
-            resp.setItem(sessionItem);
-        } else {
-            resp.setCode(ErrorCode.CODE_AUTH_ERROR);
-            resp.setMessage(ErrorCode.MSG_AUTH_ERROR);
-        }
-        return resp;
+//        // 从数据库里得到
+//        UserVo user = usersRepo.findById(login.getUsername());
+//
+//        SessionResponse resp = new SessionResponse();
+//        SessionItem sessionItem = new SessionItem();
+//        if (user != null) {
+//            sessionItem.setToken("xxx.xxx.xxx");
+//            sessionItem.setUserId(user.getId());
+//            sessionItem.setEmail(user.getEmail());
+//            sessionItem.setRole(user.getRole());
+//
+//            resp.setCode(ErrorCode.CODE_SUCCESS);
+//            resp.setMessage("Dummy Login Success");
+//            resp.setItem(sessionItem);
+//        } else {
+//            resp.setCode(ErrorCode.CODE_AUTH_ERROR);
+//            resp.setMessage(ErrorCode.MSG_AUTH_ERROR);
+//        }
+        return new OperationResponse();
     }
 
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Will do log out", response = SessionResponse.class)})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Will do log out", response = OperationResponse.class)})
     @RequestMapping(value = "/logout", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public SessionResponse sessionLogout(@RequestBody Login login, HttpServletRequest request, HttpServletResponse response) {
+    public OperationResponse sessionLogout(@RequestBody Login login, HttpServletRequest request, HttpServletResponse response) {
 //        UserMapper user = userRepo.findOneByUserIdAndPassword(login.getUsername(), login.getPassword()).orElse(null);
         log.error("received /logout request");
 
-        SessionResponse resp = new SessionResponse();
+        OperationResponse resp = new OperationResponse();
         SessionItem sessionItem = new SessionItem();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -77,7 +78,7 @@ public class SessionController {
         }
         resp.setCode(ErrorCode.CODE_SUCCESS);
         resp.setMessage("logout Success");
-        resp.setItem(sessionItem);
+        resp.setBody(sessionItem);
 
         return resp;
     }

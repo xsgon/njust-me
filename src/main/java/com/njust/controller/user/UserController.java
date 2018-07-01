@@ -28,36 +28,50 @@ public class UserController {
     @ApiOperation(value = "Gets current user information", response = OperationResponse.class)
     @RequestMapping(value = "/read/current_user", method = RequestMethod.POST, produces = {"application/json"})
     public OperationResponse getUserInfo() {
-        String loggedInUserId = userService.getLoggedInUserId();
-        UserVo userVo = userService.getUserInfoByUserId(loggedInUserId);
+        UserVo userVo = userService.getLoggedInUser();
         OperationResponse response = new OperationResponse();
-        userVo.set_id("");
+        userVo.set_id("shadowed");
+        userVo.setPassword("shadowed");
         response.setBody(userVo);
-
-        Object u = SecurityContextHolder.getContext().
-                getAuthentication().getPrincipal();
-        JSONObject json = new JSONObject(u);
-        log.info("user is " + json);
-
 
         return response;
     }
 
     @ApiOperation(value = "add new user", response = OperationResponse.class)
-    @RequestMapping(value = "/write/new_user", method = RequestMethod.POST, produces = {"application/json"})
+    @RequestMapping(value = "/add/new_user", method = RequestMethod.POST, produces = {"application/json"})
     @RolesAllowed({"ADMIN", "SUPER_ADMIN"})
     public OperationResponse addNewUser(@RequestBody UserVo userVo) {
-        Long now = System.currentTimeMillis();
-        userVo.setCreateTime(now);
-        userVo.setUpdateTime(now);
-        userVo.setPassword(new BCryptPasswordEncoder().encode(userVo.getPassword()));
-
-        int num = userService.addNewUser(userVo);
+        boolean auth = true;
+        UserVo currUser = userService.getLoggedInUser();
         OperationResponse response = new OperationResponse();
-        if (num == 0) {
-            response.setCode(ErrorCode.CODE_USER_EXISTS);
-            response.setMessage(ErrorCode.MSG_USER_EXISTS);
+
+        // auth check
+        if (currUser.getRole().equals(userVo.getRole())) {
+            // can not create new user of same level
+            auth = false;
+        } else if (userVo.getRole().equals(Role.ROLE_SUPER_ADMIN.name())) {
+            // can not create super admin
+            auth = false;
         }
+
+        if (!auth) {
+            response.setCode(ErrorCode.CODE_ACCESS_DENY);
+            response.setMessage(ErrorCode.MSG_ACCESS_DENY);
+        } else {
+            Long now = System.currentTimeMillis();
+            userVo.setCreateTime(now);
+            userVo.setUpdateTime(now);
+            userVo.setActive(1);
+            userVo.setPassword(new BCryptPasswordEncoder().encode(userVo.getPassword()));
+
+            int num = userService.addNewUser(userVo);
+
+            if (num == 0) {
+                response.setCode(ErrorCode.CODE_USER_EXISTS);
+                response.setMessage(ErrorCode.MSG_USER_EXISTS);
+            }
+        }
+
         return response;
     }
 
