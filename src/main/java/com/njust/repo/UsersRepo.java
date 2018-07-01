@@ -7,4 +7,5 @@ public interface UsersRepo extends MongoRepository<UserVo, String> {
     UserVo findById(String id);
     UserVo insert(UserVo userVo);
     UserVo save(UserVo userVo);
+    void delete(UserVo userVo);
 }

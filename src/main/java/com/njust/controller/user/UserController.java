@@ -1,30 +1,20 @@
 package com.njust.controller.user;
 
-import com.njust.security.UserDetailsService;
+import com.njust.service.UserService;
 import com.njust.vo.UserVo;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RolesAllowed;
-import javax.servlet.http.HttpServletRequest;
-
-import com.google.common.base.Strings;
 
 import com.njust.model.response.*;
 import com.njust.model.user.*;
-import springfox.documentation.spring.web.json.Json;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
 @RestController
 @Api(tags = {"Authentication"})
@@ -72,24 +62,40 @@ public class UserController {
     }
 
 
-    @ApiOperation(value = "modify user", response = OperationResponse.class)
+    @ApiOperation(value = "update user information", response = OperationResponse.class)
     @RequestMapping(value = "/update/user", method = RequestMethod.POST, produces = {"application/json"})
     public OperationResponse updateUser(@RequestBody UserVo userVo) {
         UserVo dbUser = userService.getUserInfoByUserId(userVo.getId());
         UserVo currUser = userService.getLoggedInUser();
         OperationResponse response = new OperationResponse();
+        boolean auth = true;
 
-        // normal use can only modify itself information
-        if (currUser.getRole().equals(Role.ROLE_NORMAL.name())) {
-            if (!currUser.getId().equals(userVo.getId())) {
-                response.setCode(ErrorCode.CODE_ACCESS_DENY);
-                response.setMessage(ErrorCode.MSG_ACCESS_DENY);
-                return response;
-            }
+        // check if user exists
+        if (dbUser == null) {
+            response.setCode(ErrorCode.CODE_USER_NOT_EXISTS);
+            response.setMessage(ErrorCode.MSG_USER_NOT_EXISTS);
+            return response;
         }
 
-        int num = 0;
-        if (dbUser != null) {
+        // check auth
+        if (currUser.getRole().equals(Role.ROLE_NORMAL.name())
+                && !currUser.getId().equals(userVo.getId())) {
+            // normal user can only modify himself information
+            auth = false;
+        } else if (!currUser.getId().equals(dbUser.getId())
+                && currUser.getRole().equals(Role.ROLE_ADMIN.name())
+                && dbUser.getRole().equals(Role.ROLE_ADMIN.name())) {
+            // admin user can not modify other admin's information
+            auth = false;
+        } else if (currUser.getRole().equals(Role.ROLE_SUPER_ADMIN.name())) {
+            auth = false;
+        }
+
+        if (!auth) {
+            response.setCode(ErrorCode.CODE_ACCESS_DENY);
+            response.setMessage(ErrorCode.MSG_ACCESS_DENY);
+        } else {
+            int num = 0;
             userVo.setRole(dbUser.getRole());
             userVo.setPassword(dbUser.getPassword());
             userVo.setActive(dbUser.getActive());
@@ -101,14 +107,48 @@ public class UserController {
                 response.setCode(ErrorCode.CODE_UPDATE_USER_FAILED);
                 response.setMessage(ErrorCode.MSG_UPDATE_USER_FAILED);
             }
-        } else {
-            response.setCode(ErrorCode.CODE_USER_NOT_EXISTS);
-            response.setMessage(ErrorCode.MSG_USER_NOT_EXISTS);
         }
 
         return response;
     }
 
+    @ApiOperation(value = "delete user", response = OperationResponse.class)
+    @RequestMapping(value = "/delete/user", method = RequestMethod.POST, produces = {"application/json"})
+    @RolesAllowed({"ADMIN", "SUPER_ADMIN"})
+    public OperationResponse deleteUser(@RequestBody UserVo userVo) {
+        UserVo currUser = userService.getLoggedInUser();
+        UserVo dbUser = userService.getUserInfoByUserId(userVo.getId());
+        OperationResponse response = new OperationResponse();
+        boolean auth = true;
 
+        if (dbUser == null) {
+            response.setCode(ErrorCode.CODE_USER_NOT_EXISTS);
+            response.setMessage(ErrorCode.MSG_USER_NOT_EXISTS);
+            return response;
+        }
+
+        // auth check
+        if (userVo.getId().equals(currUser.getId())) {
+            // one can not delete himself
+            auth = false;
+        } else if (currUser.getRole().equals(Role.ROLE_ADMIN.name())
+                && dbUser.getRole().equals(Role.ROLE_ADMIN.name())) {
+            // admin can not delete other admin
+            auth = false;
+        } else if (dbUser.getRole().equals(Role.ROLE_SUPER_ADMIN.name())) {
+            // you can not delete super admin here
+            auth = false;
+        }
+
+        if (!auth) {
+            response.setCode(ErrorCode.CODE_ACCESS_DENY);
+            response.setMessage(ErrorCode.MSG_ACCESS_DENY);
+        } else {
+            userVo.set_id(dbUser.get_id());
+            userService.deleteUser(userVo);
+        }
+
+        return response;
+    }
 
 }

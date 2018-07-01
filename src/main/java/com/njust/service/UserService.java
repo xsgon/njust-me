@@ -1,4 +1,4 @@
-package com.njust.controller.user;
+package com.njust.service;
 
 import com.njust.repo.UsersRepo;
 import com.njust.vo.UserVo;
@@ -41,7 +41,6 @@ public class UserService {
 		    UserVo dbUser = usersRepo.insert(user);
 		    log.info("new user is " + dbUser);
 		    return 1;
-//			return userMapper.insertUser(user) == 1;
 		}
 
 		return 0;
@@ -51,6 +50,10 @@ public class UserService {
         UserVo dbUser = usersRepo.save(user);
         log.info("now user is " + dbUser);
         return 1;
+    }
+
+    public void deleteUser(UserVo userVo) {
+	    usersRepo.delete(userVo);
     }
 
 }
