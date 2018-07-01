@@ -1,5 +1,6 @@
 package com.njust.common;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,8 +25,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler()
     public OperationResponse handleBaseException(Exception e) {
         OperationResponse resp = new OperationResponse();
-        resp.setCode(ErrorCode.CODE_SYSTEM_ERROR);
-        resp.setMessage(e.getMessage());
+
+        if (e instanceof AccessDeniedException) {
+            resp.setCode(ErrorCode.CODE_ACCESS_DENY);
+            resp.setMessage(ErrorCode.MSG_ACCESS_DENY);
+        } else {
+            resp.setCode(ErrorCode.CODE_SYSTEM_ERROR);
+            resp.setMessage(e.getMessage());
+        }
 //        resp.setOperationStatus(ResponseStatusEnum.ERROR);
 //        resp.setOperationMessage(e.getMessage());
         return resp;

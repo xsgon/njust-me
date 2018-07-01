@@ -2,12 +2,14 @@ package com.njust.controller.user;
 
 import com.njust.repo.UsersRepo;
 import com.njust.vo.UserVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
+@Slf4j
 public class UserService {
 
     @Autowired
@@ -32,14 +34,23 @@ public class UserService {
 	}
 
 
-	public boolean addNewUser(UserVo user) {
+	public int addNewUser(UserVo user) {
         UserVo oldUser = this.getUserInfoByUserId(user.getId());
+        log.info("old user is " + oldUser);
 		if (oldUser == null){
-		    usersRepo.insert(user);
+		    UserVo dbUser = usersRepo.insert(user);
+		    log.info("new user is " + dbUser);
+		    return 1;
 //			return userMapper.insertUser(user) == 1;
 		}
 
-		return true;
+		return 0;
 	}
+
+    public int updateUser(UserVo user) {
+        UserVo dbUser = usersRepo.save(user);
+        log.info("now user is " + dbUser);
+        return 1;
+    }
 
 }

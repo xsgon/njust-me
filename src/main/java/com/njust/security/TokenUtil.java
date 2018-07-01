@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Slf4j
 public class TokenUtil {
-    private static final long VALIDITY_TIME_MS = 2 * 60 * 60 * 1000; // 2 hours  validity
+    private static final long VALIDITY_TIME_MS = 8 * 60 * 60 * 1000; // 2 hours  validity
     private static final String AUTH_HEADER_NAME = "Authorization";
 
     private static final LoadingCache<String, String> logoutTokens = CacheBuilder.newBuilder()

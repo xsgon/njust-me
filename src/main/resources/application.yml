@@ -19,6 +19,7 @@ spring:
         mongodb:
             uri: mongodb://screw:Screw[123@beta.wcare.cn:38027/screw
 
+
     resources:
         static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,classpath:/webui/
 
@@ -29,7 +30,7 @@ springfox:
     documentation:
         swagger.v2.path: /controller-docs
 
-mybatis:
-#  type-aliases-package: com.example.junior.Entity  //这里是实体类所在的包
-  mapper-locations: classpath:/mapper/*.xml  //这里是放sql语句的映射文件
+#mybatis:
+##  type-aliases-package: com.example.junior.Entity  //这里是实体类所在的包
+#  mapper-locations: classpath:/mapper/*.xml  //这里是放sql语句的映射文件
 

@@ -17,4 +17,10 @@ public class OperationResponse {
     @ApiModelProperty(required = true)
     private int code;
     private String message;
+    private Object body;
+
+    public OperationResponse() {
+        this.code = ErrorCode.CODE_SUCCESS;
+        this.message = ErrorCode.MSG_SUCCESS;
+    }
 }
