@@ -55,10 +55,23 @@
                         //NProgress.start();
                         requestLogin({username: this.ruleForm2.account, password: this.ruleForm2.checkPass})
                             .then((res) => {
-                                console.log(res);
+                                this.logining = false;
+
+                                sessionStorage.setItem('token', res.data.body.token);
+                                sessionStorage.setItem('user', common.j2s(res.data.body.user));
+                                this.$router.push({path: '/experiment-list'});
                             })
                             .catch(error => {
-                                console.log(error.response);
+                                this.logining = false;
+
+                                let data = error.response.data;
+                                if (data !== undefined) {
+                                    common.toastMsg('登录失败：\nCode: '
+                                        + data.code + '\nMsg: '
+                                        + data.message);
+                                } else {
+                                    common.toastMsg('登录失败：\n网络故障: ' + error.response.message);
+                                }
                             });
                         // let url = 'http://localhost:9119/session';
                         // axios.post(url, loginParams)

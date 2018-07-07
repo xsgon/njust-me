@@ -86,20 +86,20 @@ const commonFn = {
         }
         switch (type) {
             case 'empty':
-                text = (!!value.trim() == false) ? att : ''
+                text = (!!value.trim() === false) ? att : ''
                 break
             case 'mail':
                 text = (/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value) == false) ? '请输入正确邮箱格式' : ''
-                text = (!!value.trim() == false) ? '邮箱内容不能为空' : text
+                text = (!!value.trim() === false) ? '邮箱内容不能为空' : text
                 break
             case 'phone':
-                text = (/^1(3|4|5|7|8)\d{9}$/.test(value) == false) ? '请输入正确手机号码格式' : ''
-                text = (!!value.trim() == false) ? '手机内容不能为空' : text
+                text = (/^1(3|4|5|7|8)\d{9}$/.test(value) === false) ? '请输入正确手机号码格式' : ''
+                text = (!!value.trim() === false) ? '手机内容不能为空' : text
                 break
             default:
                 return true
         }
-        if (text != '') {
+        if (text !== '') {
             common.toastMsg(text)
             return false
         }

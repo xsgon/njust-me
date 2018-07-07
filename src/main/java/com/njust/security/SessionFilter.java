@@ -94,20 +94,23 @@ public class SessionFilter extends AbstractAuthenticationProcessingFilter {
         log.info("Login Success");
 
         TokenUser tokenUser = (TokenUser) authToken.getPrincipal();
+        tokenUser.getUser().setPassword("shadowed");
+        tokenUser.getUser().set_id("shadowed");
+
         OperationResponse resp = new OperationResponse();
-        SessionItem respItem = new SessionItem();
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String tokenString = this.tokenUtil.createTokenForUser(tokenUser);
-
-        respItem.setEmail(tokenUser.getUser().getEmail());
+        SessionItem respItem = new SessionItem();
         respItem.setToken(tokenString);
-        respItem.setRole(tokenUser.getRole());
+        respItem.setUser(tokenUser.getUser());
 
         resp.setCode(ErrorCode.CODE_SUCCESS);
         resp.setMessage("Login Success");
         resp.setBody(respItem);
         String jsonRespString = ow.writeValueAsString(resp);
 
+        res.setCharacterEncoding("utf8");
+        res.setContentType("application/json");
         res.setStatus(HttpServletResponse.SC_OK);
         res.getWriter().write(jsonRespString);
         //res.getWriter().write(jsonResp.toString());
@@ -133,6 +136,8 @@ public class SessionFilter extends AbstractAuthenticationProcessingFilter {
         }
 
         JSONObject jsonObject = new JSONObject(rsp);
+        response.setCharacterEncoding("utf8");
+        response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write(jsonObject.toString());
         response.getWriter().flush();

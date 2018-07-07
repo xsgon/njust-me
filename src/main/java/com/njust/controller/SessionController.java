@@ -67,17 +67,13 @@ public class SessionController {
         log.info("received /logout request");
 
         OperationResponse resp = new OperationResponse();
-        SessionItem sessionItem = new SessionItem();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        sessionItem.setUserId("nobody");
         if (auth != null) {
-            sessionItem.setUserId(auth.getName());
             SecurityContextHolder.getContext().setAuthentication(null);
         }
         resp.setCode(ErrorCode.CODE_SUCCESS);
         resp.setMessage("logout Success");
-        resp.setBody(sessionItem);
 
         return resp;
     }

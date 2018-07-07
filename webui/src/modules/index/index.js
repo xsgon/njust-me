@@ -29,15 +29,17 @@ router.beforeEach((to, from, next) => {
     // 可以在这里增加逻辑判断？
     console.log("before router");
     if (to.path === '/login') {
+        // sessionStorage.removeItem('user');
         sessionStorage.removeItem('user');
+        sessionStorage.removeItem('token');
     }
-    let user = JSON.parse(sessionStorage.getItem('user'));
-    if (!user && to.path !== '/login') {
-        next({path: '/login'})
+    // let user = JSON.parse(sessionStorage.getItem('user'));
+    if (!sessionStorage.getItem('token') && to.path !== '/login') {
+        next({path: '/login'});
     } else {
-        next()
+        next();
     }
-})
+});
 
 //router.afterEach(transition => {
 //NProgress.done();
