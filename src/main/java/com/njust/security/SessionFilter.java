@@ -6,6 +6,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.security.core.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.*;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -39,33 +40,51 @@ public class SessionFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException, JSONException {
-        try {
-            log.info("attemptAuthentication, received session request from web");
-            String jsonString = IOUtils.toString(request.getInputStream(), "UTF-8");
-            /* using org.json */
-            JSONObject userJSON = new JSONObject(jsonString);
-            String username = userJSON.getString("username");
-            String password = userJSON.getString("password");
-            boolean logout = userJSON.has("logout");
-            String browser = request.getHeader("UserMapper-Agent") != null ? request.getHeader("UserMapper-Agent") : "";
-            String ip = request.getRemoteAddr();
-            log.info("\nip:{} \nbrowser:{} \n----", ip, browser);
+//        try {
+//            log.info("attemptAuthentication, received session request from web");
+//            String jsonString = IOUtils.toString(request.getInputStream(), "UTF-8");
+//            /* using org.json */
+//            JSONObject userJSON = new JSONObject(jsonString);
+//            String username = userJSON.getString("username");
+//            String password = userJSON.getString("password");
+//            boolean logout = userJSON.has("logout");
+//            String browser = request.getHeader("UserMapper-Agent") != null ? request.getHeader("UserMapper-Agent") : "";
+//            String ip = request.getRemoteAddr();
+//            log.info("\nip:{} \nbrowser:{} \n----", ip, browser);
+//
+//            Authentication auth = null;
+//            if (logout) {
+//                tokenUtil.revokeToken(request);
+//                SecurityContextHolder.getContext().setAuthentication(null);
+//            } else {
+//                final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
+//                auth = getAuthenticationManager().authenticate(authToken); // This will take to successfulAuthentication or faliureAuthentication function
+//            }
+//            return auth;
+//
+//        } catch (JSONException | AuthenticationException e) {
+//            throw new AuthenticationServiceException(e.getMessage());
+//        }
+        log.info("attemptAuthentication, received session request from web");
+        String jsonString = IOUtils.toString(request.getInputStream(), "UTF-8");
+        /* using org.json */
+        JSONObject userJSON = new JSONObject(jsonString);
+        String username = userJSON.getString("username");
+        String password = userJSON.getString("password");
+        boolean logout = userJSON.has("logout");
+        String browser = request.getHeader("UserMapper-Agent") != null ? request.getHeader("UserMapper-Agent") : "";
+        String ip = request.getRemoteAddr();
+        log.info("\nip:{} \nbrowser:{} \n----", ip, browser);
 
-            Authentication auth = null;
-            if (logout) {
-                tokenUtil.revokeToken(request);
-                SecurityContextHolder.getContext().setAuthentication(null);
-            } else {
-                //final UsernamePasswordAuthenticationToken loginToken = new UsernamePasswordAuthenticationToken("demo", "demo");
-                final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
-//            final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, "$2a$10$Mf0kwi6u.AAMnBjYK.BrKuJ4yU82H4xO48Bk3Iqq4.uYd2Ph82VQu");
-                auth = getAuthenticationManager().authenticate(authToken); // This will take to successfulAuthentication or faliureAuthentication function
-            }
-            return auth;
-
-        } catch (JSONException | AuthenticationException e) {
-            throw new AuthenticationServiceException(e.getMessage());
+        Authentication auth = null;
+        if (logout) {
+            tokenUtil.revokeToken(request);
+            SecurityContextHolder.getContext().setAuthentication(null);
+        } else {
+            final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
+            auth = getAuthenticationManager().authenticate(authToken); // This will take to successfulAuthentication or faliureAuthentication function
         }
+        return auth;
     }
 
     @Override
@@ -96,5 +115,27 @@ public class SessionFilter extends AbstractAuthenticationProcessingFilter {
         res.getWriter().close();
 
         // DONT call supper as it contine the filter chain super.successfulAuthentication(req, res, chain, authResult);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+//        super.unsuccessfulAuthentication(request, response, failed);
+        OperationResponse rsp = new OperationResponse();
+        if (failed instanceof UsernameNotFoundException) {
+            rsp.setCode(ErrorCode.CODE_USER_NOT_EXISTS);
+            rsp.setMessage(ErrorCode.MSG_USER_NOT_EXISTS);
+        } else if (failed instanceof DisabledException) {
+            rsp.setCode(ErrorCode.CODE_USER_DISABLED);
+            rsp.setMessage(ErrorCode.MSG_USER_DISABLED);
+        } else {
+            rsp.setCode(ErrorCode.CODE_AUTH_ERROR);
+            rsp.setMessage(ErrorCode.MSG_AUTH_ERROR + ":" + failed.getMessage());
+        }
+
+        JSONObject jsonObject = new JSONObject(rsp);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write(jsonObject.toString());
+        response.getWriter().flush();
+        response.getWriter().close();
     }
 }

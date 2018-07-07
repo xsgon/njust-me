@@ -68,6 +68,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Bean
+    public UserAuthProvider userAuthProvider() {
+        UserAuthProvider myAuthProvider = new UserAuthProvider();
+        myAuthProvider.setUserDetailsService(userDetailsService);
+        myAuthProvider.setPasswordEncoder(passwordEncoder());
+        myAuthProvider.setHideUserNotFoundExceptions(false);
+
+        return myAuthProvider;
+    };
+
+    @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -76,6 +86,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 //        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+//        auth.authenticationProvider()
+//        userAuthProvider.setHideUserNotFoundExceptions(false);
+//        userAuthProvider.setUserDetailsService(userDetailsService);
+        auth
+                .authenticationProvider(userAuthProvider());
+//                .userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 }

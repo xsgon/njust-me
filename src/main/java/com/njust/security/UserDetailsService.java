@@ -16,18 +16,17 @@ public class UserDetailsService implements org.springframework.security.core.use
     @Autowired
     private UsersRepo usersRepo;
 
+    private boolean hideUserNotFoundExceptions = false;
+
+
     private final AccountStatusUserDetailsChecker detailsChecker = new AccountStatusUserDetailsChecker();
 
     @Override
     public final TokenUser loadUserByUsername(String username) throws UsernameNotFoundException, DisabledException {
         log.info("auth user " + username + " with database info");
 
-//        final UserMapper user = userRepo.findOneByUserId(username).orElseThrow(() -> new UsernameNotFoundException("UserMapper not found"));
-        //UserVo userVo = usersRepo.findOne(username);
-//        log.info("usersVo is " + usersRepo.findById(username));
         // 从数据库里取出用户信息
         UserVo user = usersRepo.findById(username);
-//        log.info("fetch database info success");
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }

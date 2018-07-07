@@ -24,7 +24,7 @@ This is a dummy rest controller, for the purpose of documentation (/session) pat
  - If Security is enabled then SessionFilter.java is invoked
  - Enabling and Disabling Security is done at config/applicaton.properties 'security.ignored=/**'
 */
-
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @Api(tags = {"Authentication"})
 @Slf4j
@@ -63,9 +63,8 @@ public class SessionController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Will do log out", response = OperationResponse.class)})
     @RequestMapping(value = "/logout", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public OperationResponse sessionLogout(@RequestBody Login login, HttpServletRequest request, HttpServletResponse response) {
-//        UserMapper user = userRepo.findOneByUserIdAndPassword(login.getUsername(), login.getPassword()).orElse(null);
-        log.error("received /logout request");
+    public OperationResponse sessionLogout() {
+        log.info("received /logout request");
 
         OperationResponse resp = new OperationResponse();
         SessionItem sessionItem = new SessionItem();
