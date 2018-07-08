@@ -1,11 +1,13 @@
 package com.njust.controller.user;
 
+import com.njust.po.PageParam;
 import com.njust.service.UserService;
 import com.njust.vo.UserVo;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +17,9 @@ import javax.annotation.security.RolesAllowed;
 
 import com.njust.model.response.*;
 import com.njust.model.user.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Api(tags = {"Authentication"})
@@ -33,6 +38,41 @@ public class UserController {
         userVo.set_id("shadowed");
         userVo.setPassword("shadowed");
         response.setBody(userVo);
+
+        return response;
+    }
+
+    @ApiOperation(value = "read all users under management", response = OperationResponse.class)
+    @RequestMapping(value = "/read/all", method = RequestMethod.POST, produces = {"application/json"})
+    @RolesAllowed({"ADMIN", "SUPER_ADMIN"})
+    public OperationResponse getUsers(@RequestBody PageParam params) {
+        UserVo userVo = userService.getLoggedInUser();
+        params.formalize();
+
+        Sort.Order timeOrder = new Sort.Order(Sort.Direction.DESC, "createTime");
+        Sort sort = new Sort(timeOrder);
+        PageRequest pgReq = new PageRequest(params.getPage(), params.getPageSize(), sort);
+        Page<UserVo> pgUsers;
+        if (userVo.getRole().equals(Role.ROLE_SUPER_ADMIN.name())) {
+            pgUsers = userService.findAll(pgReq);
+        } else {
+            pgUsers = userService.findAllByRole(Role.ROLE_NORMAL.name(), pgReq);
+        }
+        List<UserVo> users = new ArrayList<>(pgUsers.getContent());
+
+        OperationResponse response = new OperationResponse();
+        response.setPageInfo(pgUsers);
+        response.setBody(users);
+
+        return response;
+    }
+
+    @ApiOperation(value = "read all users under management", response = OperationResponse.class)
+    @RequestMapping(value = "/read/special", method = RequestMethod.POST, produces = {"application/json"})
+    @RolesAllowed({"ADMIN", "SUPER_ADMIN"})
+    public OperationResponse readTest() {
+        OperationResponse response = new OperationResponse();
+        response.setBody(userService.customFind());
 
         return response;
     }

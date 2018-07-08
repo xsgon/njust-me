@@ -9,6 +9,7 @@ package com.njust.model.response;
 
 import io.swagger.annotations.*;
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 @Data //for getters and setters
 public class OperationResponse {
@@ -17,10 +18,21 @@ public class OperationResponse {
     @ApiModelProperty(required = true)
     private int code;
     private String message;
+    private long total;
+    private int totalPage;
+    private int page;
+    private int pageSize;
     private Object body;
 
     public OperationResponse() {
         this.code = ErrorCode.CODE_SUCCESS;
         this.message = ErrorCode.MSG_SUCCESS;
+    }
+
+    public void setPageInfo(Page<?> pageInfo) {
+        this.total = pageInfo.getTotalElements();
+        this.totalPage = pageInfo.getTotalPages();
+        this.page = pageInfo.getNumber();
+        this.pageSize = pageInfo.getSize();
     }
 }

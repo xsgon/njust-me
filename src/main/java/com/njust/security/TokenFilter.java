@@ -1,6 +1,9 @@
 package com.njust.security;
 
+import com.njust.model.response.ErrorCode;
+import com.njust.model.response.OperationResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +37,7 @@ public class TokenFilter extends GenericFilterBean {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         log.info("do token filter");
+
         try {
             SecurityContextHolder.getContext().setAuthentication(null);
 
@@ -41,12 +45,24 @@ public class TokenFilter extends GenericFilterBean {
             if (authentication.isPresent()) {
                 SecurityContextHolder.getContext().setAuthentication(authentication.get());
             } else {
-                SecurityContextHolder.getContext().setAuthentication(null);
+                if (!request.getRequestURI().startsWith("/session")) {
+                    throw new JwtException("not a session request");
+                }
             }
 
             filterChain.doFilter(req, res);
         } catch (JwtException e) {
+            OperationResponse resp = new OperationResponse();
+            resp.setCode(ErrorCode.CODE_AUTH_ERROR);
+            resp.setMessage(ErrorCode.MSG_AUTH_ERROR);
+            JSONObject jsonObject = new JSONObject(resp);
+
+            response.setCharacterEncoding("utf8");
+            response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(jsonObject.toString());
+            response.getWriter().flush();
+            response.getWriter().close();
         } finally {
             SecurityContextHolder.getContext().setAuthentication(null);
         }

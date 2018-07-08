@@ -1,20 +1,33 @@
 // import cryptoWrapper from 'common/js/cryptoWrapper'
 import axios from 'axios'
 
-let urlHost = 'http://localhost:9119';    // local spring boot server
+let TOKEN_SUFFIX = {headers: {'Content-Type': 'application/json', 'Authorization': sessionStorage.getItem('token')}};
 
+let urlHost = 'http://localhost:9119';    // local spring boot server
 let URL_SESSION = '/session';
-// let urlProd = '';                          // product spring boot server
-// let urlMock = '';                          // mock to simulate http server
-// let host = 'http://localhost:8080/Urban/rest';
-var rootIP = process.env.API_ROOT;
+
+let URL_MAIN_TEST_READ_ALL = '/main_test/read/all';
+
+let rootIP = process.env.API_ROOT;
+
+let api = {};
 
 // export const requestLogin = params => { return axios.post(`${urlMock}/login`, params).then(res => res.data); };
-export const requestLogin = (params) => {
-    // return axios.post(urlHost + '/session', params).then(res => res);
-    //return http.apiPost(url, params);
+api.requestLogin = (params) => {
     return axios.post(urlHost + URL_SESSION, params);
 };
+
+api.requestLogout = () => {
+    return axios.post(urlHost + URL_SESSION, {'username': sessionStorage.getItem('user.id'), 'logout': ''})
+};
+
+api.getMainTest = (params) => {
+    return axios.post(urlHost + URL_MAIN_TEST_READ_ALL,
+        params,
+        TOKEN_SUFFIX);
+};
+
+export default api;
 
 export const getUserList = params => {
     return axios.get(`${urlMock}/user/list`, {params: params});

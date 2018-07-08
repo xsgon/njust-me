@@ -69,6 +69,7 @@
 </template>
 
 <script>
+    import api from 'api/api'
     export default {
         data() {
             return {
@@ -102,11 +103,18 @@
             },
             //退出登录
             logout: function () {
-                var _this = this;
+                let _this = this;
                 this.$confirm('确认退出吗?', '提示', {
                     //type: 'warning'
                 }).then(() => {
                     sessionStorage.removeItem('user');
+                    sessionStorage.removeItem('token');
+                    sessionStorage.removeItem('user.id');
+
+                    api.requestLogout().then((res) => {
+                        console.log(res);
+                    }).catch((error) => {console.log(error.response)});
+
                     _this.$router.push('/login');
                 }).catch(() => {
 

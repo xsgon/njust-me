@@ -40,31 +40,6 @@ public class SessionFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException, JSONException {
-//        try {
-//            log.info("attemptAuthentication, received session request from web");
-//            String jsonString = IOUtils.toString(request.getInputStream(), "UTF-8");
-//            /* using org.json */
-//            JSONObject userJSON = new JSONObject(jsonString);
-//            String username = userJSON.getString("username");
-//            String password = userJSON.getString("password");
-//            boolean logout = userJSON.has("logout");
-//            String browser = request.getHeader("UserMapper-Agent") != null ? request.getHeader("UserMapper-Agent") : "";
-//            String ip = request.getRemoteAddr();
-//            log.info("\nip:{} \nbrowser:{} \n----", ip, browser);
-//
-//            Authentication auth = null;
-//            if (logout) {
-//                tokenUtil.revokeToken(request);
-//                SecurityContextHolder.getContext().setAuthentication(null);
-//            } else {
-//                final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
-//                auth = getAuthenticationManager().authenticate(authToken); // This will take to successfulAuthentication or faliureAuthentication function
-//            }
-//            return auth;
-//
-//        } catch (JSONException | AuthenticationException e) {
-//            throw new AuthenticationServiceException(e.getMessage());
-//        }
         log.info("attemptAuthentication, received session request from web");
         String jsonString = IOUtils.toString(request.getInputStream(), "UTF-8");
         /* using org.json */

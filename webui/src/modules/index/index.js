@@ -8,19 +8,16 @@ import Vuex from 'vuex'
 //import NProgress from 'nprogress'
 //import 'nprogress/nprogress.css'
 import router from '../../route/routes'
+import util from '../../common/js/util'
 // import Mock from '../../mock'
 
 // Mock.bootstrap();
 import 'font-awesome/css/font-awesome.min.css'
 
-import http from '../../common/http'
-import commonFn from '../../common/comm_utils'
+Vue.use(ElementUI);
+Vue.use(Vuex);
 
-Vue.use(ElementUI)
-Vue.use(Vuex)
-
-window.http = http.methods
-window.common = commonFn
+window.common = util;
 //NProgress.configure({ showSpinner: false });
 
 router.beforeEach((to, from, next) => {

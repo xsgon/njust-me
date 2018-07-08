@@ -18,8 +18,7 @@
 </template>
 
 <script>
-    import {requestLogin} from 'api/api';
-    import axios from 'axios';
+    import api from 'api/api';
     //import NProgress from 'nprogress'
     export default {
         data() {
@@ -53,12 +52,13 @@
                         //_this.$router.replace('/table');
                         this.logining = true;
                         //NProgress.start();
-                        requestLogin({username: this.ruleForm2.account, password: this.ruleForm2.checkPass})
+                        api.requestLogin({username: this.ruleForm2.account, password: this.ruleForm2.checkPass})
                             .then((res) => {
                                 this.logining = false;
 
                                 sessionStorage.setItem('token', res.data.body.token);
-                                sessionStorage.setItem('user', common.j2s(res.data.body.user));
+                                sessionStorage.setItem('user', common.obj2s(res.data.body.user));
+                                sessionStorage.setItem('user.id', res.data.body.user.id);
                                 this.$router.push({path: '/experiment-list'});
                             })
                             .catch(error => {

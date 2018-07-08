@@ -3,10 +3,15 @@ package com.njust.service;
 import com.njust.repo.UsersRepo;
 import com.njust.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -54,6 +59,19 @@ public class UserService {
 
     public void deleteUser(UserVo userVo) {
 	    usersRepo.delete(userVo);
+    }
+
+    public Page<UserVo> findAllByRole(String role, PageRequest pageRequest) {
+		return usersRepo.findAllByRole(role, pageRequest);
+	}
+
+    public Page<UserVo> findAll(PageRequest pageRequest) {
+        return usersRepo.findAll(pageRequest);
+    }
+
+    // only a test for mongodb template
+    public List<UserVo> customFind() {
+	    return usersRepo.customFind();
     }
 
 }
