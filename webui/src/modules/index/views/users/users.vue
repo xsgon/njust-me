@@ -21,19 +21,18 @@
 			</el-table-column>
 			<el-table-column type="index" width="60">
 			</el-table-column>
-			<el-table-column prop="name" label="姓名" width="120" sortable>
+			<el-table-column prop="id" label="账号" width="120">
 			</el-table-column>
-			<el-table-column prop="sex" label="性别" width="100" :formatter="formatSex" sortable>
+			<el-table-column prop="name" label="姓名" width="200">
 			</el-table-column>
-			<el-table-column prop="age" label="年龄" width="100" sortable>
+			<el-table-column prop="role" label="角色" width="100" :formatter="formatRole" sortable>
 			</el-table-column>
-			<el-table-column prop="birth" label="生日" width="120" sortable>
+			<el-table-column prop="phone" label="手机" width="100" sortable>
 			</el-table-column>
-			<el-table-column prop="addr" label="地址" min-width="180" sortable>
-			</el-table-column>
-			<el-table-column label="操作" width="150">
+			<el-table-column label="操作" fixed="right">
 				<template scope="scope">
-					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+					<el-button size="small" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <el-button size="small" type="text" @click="handlePasswordReset(scope.$index, scope.row)">重置密码</el-button>
 					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
@@ -113,9 +112,9 @@
 </template>
 
 <script>
-	import util from 'common/js/util'
 	//import NProgress from 'nprogress'
-	import { getUserListPage, removeUser, batchRemoveUser, editUser, addUser } from 'api/api';
+	import api from 'api/api';
+    import ROLE from "../../../../common/role-define";
 
 	export default {
 		data() {
@@ -126,6 +125,7 @@
 				users: [],
 				total: 0,
 				page: 1,
+                pageSize: 100,
 				listLoading: false,
 				sels: [],//列表选中列
 
@@ -165,9 +165,9 @@
 			}
 		},
 		methods: {
-			//性别显示转换
-			formatSex: function (row, column) {
-				return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
+			//角色显示转换
+			formatRole: function (row, column) {
+			    return ROLE[row.role];
 			},
 			handleCurrentChange(val) {
 				this.page = val;
@@ -180,17 +180,26 @@
 			//获取用户列表
 			getUsers() {
 				let para = {
-					page: this.page,
-					name: this.filters.name
+					page: this.page - 1,  // start from 0
+					//name: this.filters.name
 				};
 				this.listLoading = true;
 				//NProgress.start();
-				getUserListPage(para).then((res) => {
-					this.total = res.data.total;
-					this.users = res.data.users;
-					this.listLoading = false;
-					//NProgress.done();
-				});
+				// getUserListPage(para).then((res) => {
+				// 	this.total = res.data.total;
+				// 	this.users = res.data.users;
+				// 	this.listLoading = false;
+				// 	//NProgress.done();
+				// });
+                api.getUserList(para)
+                    .then((res) => {
+                        this.total = res.data.total;
+                        this.users = res.data.body;
+                        this.listLoading = false;
+                    })
+                    .catch((err) => {
+                        common.toastMsg('网络故障，请稍后重试', 'warn');
+                    });
 			},
 			//删除
 			handleDel: function (index, row) {
@@ -213,6 +222,10 @@
 
 				});
 			},
+            // 重置密码
+            handlePasswordReset: (index, row) => {
+
+            },
 			//显示编辑界面
 			handleEdit: function (index, row) {
 				this.editFormVisible = true;

@@ -69,8 +69,7 @@ public class SessionFilter extends AbstractAuthenticationProcessingFilter {
         log.info("Login Success");
 
         TokenUser tokenUser = (TokenUser) authToken.getPrincipal();
-        tokenUser.getUser().setPassword("shadowed");
-        tokenUser.getUser().set_id("shadowed");
+        tokenUser.getUser().hideSensitiveInfo();
 
         OperationResponse resp = new OperationResponse();
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();

@@ -44,4 +44,9 @@ public class UserVo {
         this.role = Role.ROLE_NORMAL.name();
     }
 
+    public void hideSensitiveInfo() {
+        this.setPassword("$hidden*");
+        this.set_id("$hidden*");
+    }
+
 }

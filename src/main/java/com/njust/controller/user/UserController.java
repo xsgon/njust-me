@@ -35,8 +35,7 @@ public class UserController {
     public OperationResponse getUserInfo() {
         UserVo userVo = userService.getLoggedInUser();
         OperationResponse response = new OperationResponse();
-        userVo.set_id("shadowed");
-        userVo.setPassword("shadowed");
+        userVo.hideSensitiveInfo();
         response.setBody(userVo);
 
         return response;
@@ -59,6 +58,9 @@ public class UserController {
             pgUsers = userService.findAllByRole(Role.ROLE_NORMAL.name(), pgReq);
         }
         List<UserVo> users = new ArrayList<>(pgUsers.getContent());
+        for (UserVo u : users) {
+            u.hideSensitiveInfo();
+        }
 
         OperationResponse response = new OperationResponse();
         response.setPageInfo(pgUsers);
@@ -67,7 +69,7 @@ public class UserController {
         return response;
     }
 
-    @ApiOperation(value = "read all users under management", response = OperationResponse.class)
+    @ApiOperation(value = "test", response = OperationResponse.class)
     @RequestMapping(value = "/read/special", method = RequestMethod.POST, produces = {"application/json"})
     @RolesAllowed({"ADMIN", "SUPER_ADMIN"})
     public OperationResponse readTest() {

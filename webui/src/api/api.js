@@ -1,12 +1,18 @@
 // import cryptoWrapper from 'common/js/cryptoWrapper'
 import axios from 'axios'
 
-let TOKEN_SUFFIX = {headers: {'Content-Type': 'application/json', 'Authorization': sessionStorage.getItem('token')}};
+let genHeader = () => {
+    return {
+        headers: {'Content-Type': 'application/json', 'Authorization': sessionStorage.getItem('token')}
+    };
+};
 
 let urlHost = 'http://localhost:9119';    // local spring boot server
 let URL_SESSION = '/session';
 
 let URL_MAIN_TEST_READ_ALL = '/main_test/read/all';
+
+let URL_USER_READ_ALL = '/user/read/all';
 
 let rootIP = process.env.API_ROOT;
 
@@ -18,13 +24,18 @@ api.requestLogin = (params) => {
 };
 
 api.requestLogout = () => {
-    return axios.post(urlHost + URL_SESSION, {'username': sessionStorage.getItem('user.id'), 'logout': ''})
+    let user = JSON.parse(sessionStorage.getItem('user'));
+    if (user !== null) {
+        return axios.post(urlHost + URL_SESSION, {'username': user.id, 'logout': ''})
+    }
 };
 
 api.getMainTest = (params) => {
-    return axios.post(urlHost + URL_MAIN_TEST_READ_ALL,
-        params,
-        TOKEN_SUFFIX);
+    return axios.post(urlHost + URL_MAIN_TEST_READ_ALL, params, genHeader());
+};
+
+api.getUserList = (params) => {
+    return axios.post(urlHost + URL_USER_READ_ALL, params, genHeader());
 };
 
 export default api;

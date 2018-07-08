@@ -9,6 +9,7 @@ import Vuex from 'vuex'
 //import 'nprogress/nprogress.css'
 import router from '../../route/routes'
 import util from '../../common/js/util'
+import role from '../../common/role-define'
 // import Mock from '../../mock'
 
 // Mock.bootstrap();
@@ -18,6 +19,7 @@ Vue.use(ElementUI);
 Vue.use(Vuex);
 
 window.common = util;
+window.ROLE = role;
 //NProgress.configure({ showSpinner: false });
 
 router.beforeEach((to, from, next) => {

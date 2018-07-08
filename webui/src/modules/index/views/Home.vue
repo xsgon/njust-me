@@ -109,13 +109,16 @@
                 }).then(() => {
                     sessionStorage.removeItem('user');
                     sessionStorage.removeItem('token');
-                    sessionStorage.removeItem('user.id');
-
-                    api.requestLogout().then((res) => {
-                        console.log(res);
-                    }).catch((error) => {console.log(error.response)});
 
                     _this.$router.push('/login');
+                    api.requestLogout()
+                        .then((res) => {
+                            console.log(res);
+                        })
+                        .catch((error) => {
+                            console.log(error.response)
+                        });
+
                 }).catch(() => {
 
                 });
@@ -132,7 +135,7 @@
         },
         mounted() {
             let user = sessionStorage.getItem('user');
-            console.log(user);
+            // console.log(user);
             if (user) {
                 user = JSON.parse(user);
                 this.sysUserName = user.name || '';

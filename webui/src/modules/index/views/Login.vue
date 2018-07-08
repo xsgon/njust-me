@@ -58,7 +58,6 @@
 
                                 sessionStorage.setItem('token', res.data.body.token);
                                 sessionStorage.setItem('user', common.obj2s(res.data.body.user));
-                                sessionStorage.setItem('user.id', res.data.body.user.id);
                                 this.$router.push({path: '/experiment-list'});
                             })
                             .catch(error => {
