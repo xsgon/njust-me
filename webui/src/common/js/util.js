@@ -4,6 +4,45 @@ function padding(s, len) {
     var len = len - (s + '').length;
     for (var i = 0; i < len; i++) { s = '0' + s; }
     return s;
+}
+
+// 弹出信息
+let toastMsg = (msg, type) => {
+    let position = 'middle'
+    switch (type) {
+        case 'normal':
+            // bus.$vux.toast.text(msg, position)
+            bus.$message.info(msg);
+            break
+        case 'success':
+            // bus.$vux.toast.show({
+            //     text: msg,
+            //     type: 'success',
+            //     position: position
+            // })
+            bus.$message.success(msg);
+            break
+        case 'warning':
+            // bus.$vux.toast.show({
+            //     text: msg,
+            //     type: 'warn',
+            //     position: position
+            // })
+            bus.$message.warning(msg);
+            break
+        case 'error':
+            // bus.$vux.toast.show({
+            //     text: msg,
+            //     type: 'cancel',
+            //     position: position
+            // })
+            bus.$message.error(msg);
+            break
+        default:
+            // bus.$vux.toast.text(msg, position)
+            bus.$message.info(msg);
+            break
+    }
 };
 
 export default {
@@ -91,41 +130,18 @@ export default {
         return str.replace(/(^\s*)|(\s*$)/g, '')
     },
 
-    toastMsg: (msg, type) => {
-        let position = 'middle'
-        switch (type) {
-            case 'normal':
-                // bus.$vux.toast.text(msg, position)
-                bus.$message.info(msg);
-                break
-            case 'success':
-                // bus.$vux.toast.show({
-                //     text: msg,
-                //     type: 'success',
-                //     position: position
-                // })
-                bus.$message.success(msg);
-                break
-            case 'warning':
-                // bus.$vux.toast.show({
-                //     text: msg,
-                //     type: 'warn',
-                //     position: position
-                // })
-                bus.$message.warning(msg);
-                break
-            case 'error':
-                // bus.$vux.toast.show({
-                //     text: msg,
-                //     type: 'cancel',
-                //     position: position
-                // })
-                bus.$message.error(msg);
-                break
-            default:
-                // bus.$vux.toast.text(msg, position)
-                bus.$message.info(msg);
-                break
+    toastMsg: toastMsg,
+
+    // 提示网络故障
+    handleNWException: (error) => {
+        if (error.response) {
+            toastMsg('登录失败：\nCode: '
+                + error.response.data.code + '\nMsg: '
+                + error.response.data.message, 'error');
+        } else if (error.request) {
+            toastMsg('登录失败：\n网络故障: ' + error.request, 'error');
+        } else {
+            toastMsg('登录失败：\n网络故障: ' + error.message, 'error');
         }
     },
 

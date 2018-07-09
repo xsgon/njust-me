@@ -62,15 +62,16 @@
                             })
                             .catch(error => {
                                 this.logining = false;
-
-                                let data = error.response.data;
-                                if (data !== undefined) {
-                                    common.toastMsg('登录失败：\nCode: '
-                                        + data.code + '\nMsg: '
-                                        + data.message);
-                                } else {
-                                    common.toastMsg('登录失败：\n网络故障: ' + error.response.message);
-                                }
+                                // if (error.response) {
+                                //     common.toastMsg('登录失败：\nCode: '
+                                //         + data.code + '\nMsg: '
+                                //         + data.message, 'error');
+                                // } else if (error.request) {
+                                //     common.toastMsg('登录失败：\n网络故障: ' + error.request, 'error');
+                                // } else {
+                                //     common.toastMsg('登录失败：\n网络故障: ' + error.message, 'error');
+                                // }
+                                common.handleNWException(error);
                             });
                         // let url = 'http://localhost:9119/session';
                         // axios.post(url, loginParams)
