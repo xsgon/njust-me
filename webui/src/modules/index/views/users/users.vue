@@ -82,7 +82,7 @@
 		</el-dialog>
 
 		<!--新增界面-->
-		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+		<el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
 			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
 				<el-form-item label="姓名" prop="name">
 					<el-input v-model="addForm.name" auto-complete="off"></el-input>
@@ -115,6 +115,7 @@
 	//import NProgress from 'nprogress'
 	import api from 'api/api';
     import ROLE from "../../../../common/role-define";
+    import util from "../../../../common/js/util";
 
 	export default {
 		data() {
@@ -275,7 +276,7 @@
 							//NProgress.start();
 							let para = Object.assign({}, this.addForm);
 							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							addUser(para).then((res) => {
+							api.addUser(para).then((res) => {
 								this.addLoading = false;
 								//NProgress.done();
 								this.$message({
