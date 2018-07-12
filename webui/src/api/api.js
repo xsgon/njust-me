@@ -14,6 +14,8 @@ let URL_MAIN_TEST_READ_ALL = '/main_test/read/all';
 
 let URL_USER_READ_ALL = '/user/read/all';
 
+let URL_ADD_USER = '/user/add/new_user';
+
 let rootIP = process.env.API_ROOT;
 
 let api = {};
@@ -36,6 +38,10 @@ api.getMainTest = (params) => {
 
 api.getUserList = (params) => {
     return axios.post(urlHost + URL_USER_READ_ALL, params, genHeader());
+};
+
+api.addUser = (params) => {
+    return axios.post(urlHost + URL_ADD_USER, params, genHeader());
 };
 
 export default api;
@@ -71,7 +77,7 @@ export const editUser = params => {
 };
 
 export const addUser = params => {
-    return axios.get(`${urlMock}/user/add`, {params: params});
+    return axios.get(`${urlMock}/add/new_user`, {params: params});
 };
 
 export const getInfoList = params => {
