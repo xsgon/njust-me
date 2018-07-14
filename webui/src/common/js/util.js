@@ -162,13 +162,13 @@ export default {
     // 提示网络故障
     handleNWException: (error) => {
         if (error.response) {
-            showMsg('登录失败：\nCode: '
+            showMsg('操作失败：\nCode: '
                 + error.response.data.code + '\nMsg: '
                 + error.response.data.message, 'error');
         } else if (error.request) {
-            showMsg('登录失败：\n网络故障: ' + error.request, 'error');
+            showMsg('操作失败：\n网络故障: ' + error.request, 'error');
         } else {
-            showMsg('登录失败：\n网络故障: ' + error.message, 'error');
+            showMsg('操作失败：\n网络故障: ' + error.message, 'error');
         }
     },
 
