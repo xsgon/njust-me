@@ -27,7 +27,7 @@ public class MainTestVo {
 
      */
     @Id
-    private String id;
+    private String _id;
 
     private String testId;
     private String testObj;
