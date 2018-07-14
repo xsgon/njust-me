@@ -107,8 +107,7 @@
                 this.$confirm('确认退出吗?', '提示', {
                     //type: 'warning'
                 }).then(() => {
-                    sessionStorage.removeItem('user');
-                    sessionStorage.removeItem('token');
+                    SESSION.cleanAll();
 
                     _this.$router.push('/login');
                     api.requestLogout()
@@ -134,10 +133,9 @@
             }
         },
         mounted() {
-            let user = sessionStorage.getItem('user');
+            let user = SESSION.fetchUser();
             // console.log(user);
             if (user) {
-                user = JSON.parse(user);
                 this.sysUserName = user.name || '';
                 this.sysUserAvatar = user.portrait || '';
             }

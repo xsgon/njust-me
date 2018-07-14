@@ -1,10 +1,13 @@
-var SIGN_REGEXP = /([yMdhsm])(\1*)/g;
-var DEFAULT_PATTERN = 'yyyy-MM-dd';
-function padding(s, len) {
-    var len = len - (s + '').length;
-    for (var i = 0; i < len; i++) { s = '0' + s; }
+let SIGN_REGEXP = /([yMdhsm])(\1*)/g;
+let DEFAULT_PATTERN = 'yyyy-MM-dd';
+
+let padding = (s, len) => {
+    let l = len - (s + '').length;
+    for (let i = 0; i < l; i++) {
+        s = '0' + s;
+    }
     return s;
-}
+};
 
 // 弹出信息
 let toastMsg = (msg, type) => {
@@ -23,11 +26,6 @@ let toastMsg = (msg, type) => {
             bus.$message.success(msg);
             break
         case 'warning':
-            // bus.$vux.toast.show({
-            //     text: msg,
-            //     type: 'warn',
-            //     position: position
-            // })
             bus.$message.warning(msg);
             break
         case 'error':
@@ -43,6 +41,10 @@ let toastMsg = (msg, type) => {
             bus.$message.info(msg);
             break
     }
+};
+
+let showMsg = (msg) => {
+    bus.$alert(msg, '提示', {confirmButtonText: '确定'});
 };
 
 export default {
@@ -62,13 +64,20 @@ export default {
             pattern = pattern || DEFAULT_PATTERN;
             return pattern.replace(SIGN_REGEXP, function ($0) {
                 switch ($0.charAt(0)) {
-                    case 'y': return padding(date.getFullYear(), $0.length);
-                    case 'M': return padding(date.getMonth() + 1, $0.length);
-                    case 'd': return padding(date.getDate(), $0.length);
-                    case 'w': return date.getDay() + 1;
-                    case 'h': return padding(date.getHours(), $0.length);
-                    case 'm': return padding(date.getMinutes(), $0.length);
-                    case 's': return padding(date.getSeconds(), $0.length);
+                    case 'y':
+                        return padding(date.getFullYear(), $0.length);
+                    case 'M':
+                        return padding(date.getMonth() + 1, $0.length);
+                    case 'd':
+                        return padding(date.getDate(), $0.length);
+                    case 'w':
+                        return date.getDay() + 1;
+                    case 'h':
+                        return padding(date.getHours(), $0.length);
+                    case 'm':
+                        return padding(date.getMinutes(), $0.length);
+                    case 's':
+                        return padding(date.getSeconds(), $0.length);
                 }
             });
         },
@@ -81,12 +90,24 @@ export default {
                     var _int = parseInt(matchs2[i]);
                     var sign = matchs1[i];
                     switch (sign.charAt(0)) {
-                        case 'y': _date.setFullYear(_int); break;
-                        case 'M': _date.setMonth(_int - 1); break;
-                        case 'd': _date.setDate(_int); break;
-                        case 'h': _date.setHours(_int); break;
-                        case 'm': _date.setMinutes(_int); break;
-                        case 's': _date.setSeconds(_int); break;
+                        case 'y':
+                            _date.setFullYear(_int);
+                            break;
+                        case 'M':
+                            _date.setMonth(_int - 1);
+                            break;
+                        case 'd':
+                            _date.setDate(_int);
+                            break;
+                        case 'h':
+                            _date.setHours(_int);
+                            break;
+                        case 'm':
+                            _date.setMinutes(_int);
+                            break;
+                        case 's':
+                            _date.setSeconds(_int);
+                            break;
                     }
                 }
                 return _date;
@@ -95,7 +116,7 @@ export default {
         }
     },
 
-    getRandomStringWithLength: function(len) {
+    getRandomStringWithLength: function (len) {
         let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
         let maxPos = chars.length;
         let pwd = '';
@@ -107,6 +128,10 @@ export default {
 
     obj2s: (obj) => {
         return JSON.stringify(obj)
+    },
+
+    json2obj: (str) => {
+        return JSON.parse(str);
     },
 
     cloneJson: (obj) => {
@@ -132,20 +157,46 @@ export default {
 
     toastMsg: toastMsg,
 
+    showMsg: showMsg,
+
     // 提示网络故障
     handleNWException: (error) => {
         if (error.response) {
-            toastMsg('登录失败：\nCode: '
+            showMsg('登录失败：\nCode: '
                 + error.response.data.code + '\nMsg: '
                 + error.response.data.message, 'error');
         } else if (error.request) {
-            toastMsg('登录失败：\n网络故障: ' + error.request, 'error');
+            showMsg('登录失败：\n网络故障: ' + error.request, 'error');
         } else {
-            toastMsg('登录失败：\n网络故障: ' + error.message, 'error');
+            showMsg('登录失败：\n网络故障: ' + error.message, 'error');
         }
     },
 
-    checkEmpty: function(v) {
+    // 根据返回值调用合适的函数
+    handleReturn: (res, successCb, failedCb) => {
+        // 成功
+        if (res.data !== undefined && res.data.code === 200) {
+            successCb(res);
+            return
+        }
+
+        // token 失效
+        if (res.data !== undefined && res.data.code === 401) {
+            SESSION.cleanAll();
+            bus.$router.push('/login');
+            return;
+        }
+
+        // 其它错误
+        if (res.data !== undefined) {
+            showMsg('操作失败！\code:'+res.data.code+'\nmessage:'+res.data.message);
+        } else {
+            showMsg('系统异常，请联系开发人员');
+        }
+        if (failedCb !== undefined) failedCb(res);
+    },
+
+    checkEmpty: function (v) {
         return !!v.trim()
     },
 
@@ -170,7 +221,7 @@ export default {
     validate(value, type, attText) {
         let att = ''
         let text = ''
-        if (attText != undefined) {
+        if (attText !== undefined) {
             att = attText + '不能为空'
         } else {
             att = '内容不能为空'
@@ -198,7 +249,7 @@ export default {
     },
 
     // 日期补0
-    formatDateNum: function(value) {
+    formatDateNum: function (value) {
         if (parseInt(value) < 10) {
             return '0' + parseInt(value)
         } else {
@@ -206,12 +257,36 @@ export default {
         }
     },
 
-    sessionSet(name, obj) {
-        return sessionStorage.setItem(name, JSON.stringify(obj))
+    // 手机号码校验
+    phoneValidator: (rule, value, callback) => {
+        if (!!value.trim() === false) {
+            callback(new Error('手机号码不能为空'));
+        } else if (/^1(3|4|5|7|8)\d{9}$/.test(value) === false) {
+            callback(new Error('手机号码格式错误'));
+        } else {
+            callback(  );
+        }
     },
 
-    sessionGet(name) {
-        return JSON.parse(sessionStorage.getItem(name))
-    }
+    // 密码ID校验
+    passwordValidator: (rule, value, callback) => {
+        let reg = /^[0-9a-zA-Z!@#$%^&_+-?~]{6,16}$/;  // CORRECT: {6,16} WRONG:{6, 16}!!!!!!!!!!!
+        if (reg.test(value) === false) {
+            callback(new Error('密码必须是6至16位，可视字符和数字'));
+        } else {
+            callback()
+        }
+    },
+
+    // id校验
+    idValidator: (rule, value, callback) => {
+        let reg = /^[0-9a-zA-Z!@#$%^&_+-?~]{3,16}$/;
+        if (reg.test(value) === false) {
+            callback(new Error('登录名必须是3至16位，可视字符和数字'));
+        } else {
+            callback(  )
+        }
+    },
+
 
 };

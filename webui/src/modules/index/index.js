@@ -10,6 +10,7 @@ import Vuex from 'vuex'
 import router from '../../route/routes'
 import util from '../../common/js/util'
 import role from '../../common/role-define'
+import session from '../../common/js/session'
 // import Mock from '../../mock'
 
 // Mock.bootstrap();
@@ -18,8 +19,11 @@ import 'font-awesome/css/font-awesome.min.css'
 Vue.use(ElementUI);
 Vue.use(Vuex);
 
+// public modules
 window.common = util;
 window.ROLE = role;
+window.SESSION = session;
+
 //NProgress.configure({ showSpinner: false });
 
 router.beforeEach((to, from, next) => {

@@ -1,6 +1,7 @@
 package com.njust.common;
 
 import com.mongodb.MongoSocketReadTimeoutException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +16,7 @@ Use @ExceptionHandler annotation to define the class of Exception it will catch.
 */
 @ControllerAdvice
 @RestController
+@Slf4j
 public class GlobalExceptionHandler {
 //        @ExceptionHandler(value = DataIntegrityViolationException.class)
 //    public OperationResponse handleBaseException(DataIntegrityViolationException e){
@@ -36,6 +38,8 @@ public class GlobalExceptionHandler {
         } else {
             resp.setCode(ErrorCode.CODE_SYSTEM_ERROR);
             resp.setMessage(e.getMessage());
+
+            log.error("exception", e);
         }
 //        resp.setOperationStatus(ResponseStatusEnum.ERROR);
 //        resp.setOperationMessage(e.getMessage());

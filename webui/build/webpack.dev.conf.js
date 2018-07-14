@@ -24,7 +24,7 @@ module.exports = merge(baseWebpackConfig, {
       'process.env': config.dev.env
     }),
     // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
-    new webpack.optimize.OccurenceOrderPlugin(),
+    // new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     // 跳过编译时出错的代码并记录，使编译后运行时的包不会发生错误。
     new webpack.NoErrorsPlugin(),

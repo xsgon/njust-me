@@ -55,57 +55,16 @@
                         api.requestLogin({username: this.ruleForm2.account, password: this.ruleForm2.checkPass})
                             .then((res) => {
                                 this.logining = false;
-
-                                sessionStorage.setItem('token', res.data.body.token);
-                                sessionStorage.setItem('user', common.obj2s(res.data.body.user));
-                                this.$router.push({path: '/experiment-list'});
+                                common.handleReturn(res, (res) => {
+                                    SESSION.storeToken(res.data.body.token);
+                                    SESSION.storeUser(res.data.body.user);
+                                    this.$router.push({path: '/user'});
+                                });
                             })
                             .catch(error => {
                                 this.logining = false;
-                                // if (error.response) {
-                                //     common.toastMsg('登录失败：\nCode: '
-                                //         + data.code + '\nMsg: '
-                                //         + data.message, 'error');
-                                // } else if (error.request) {
-                                //     common.toastMsg('登录失败：\n网络故障: ' + error.request, 'error');
-                                // } else {
-                                //     common.toastMsg('登录失败：\n网络故障: ' + error.message, 'error');
-                                // }
                                 common.handleNWException(error);
                             });
-                        // let url = 'http://localhost:9119/session';
-                        // axios.post(url, loginParams)
-                        //     .then(res => {
-                        //         console.log(res);
-                        //     })
-                        //     .catch(error => {
-                        //         console.log(error.response);
-                        //     });
-                        // axios.post(url, loginParams
-                        //     // , {
-                        //     //     headers: { 'X-LORDAR-TOKEN': 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMDk5ODg3NyIsIm5hbWUiOiLnjovlt6flubQiLCJleHAiOjE1Mzc3NjY3MjJ9.ZdIWVunCRt86JM7xOzmasKgk9_NzhXYLiGdfJwxNL8w' }
-                        //     // }
-                        //
-                        // ).then(response => {
-                        //     resolve(response.data)
-                        // }).catch(response => {
-                        //     reject(response)
-                        //     common.toastMsg('请求超时，请检查网络', 'warn')
-                        // })
-                        // requestLogin(loginParams).then(data => {
-                        //     this.logining = false;
-                        //     //NProgress.done();
-                        //     let {msg, code, user} = data;
-                        //     if (code !== 200) {
-                        //         this.$message({
-                        //             message: msg,
-                        //             type: 'error'
-                        //         });
-                        //     } else {
-                        //         sessionStorage.setItem('user', JSON.stringify(user));
-                        //         this.$router.push({path: '/experiment-list'});
-                        //     }
-                        // });
                     } else {
                         console.log('error submit!!');
                         return false;
