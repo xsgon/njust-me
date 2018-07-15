@@ -8,7 +8,7 @@ import com.njust.model.response.OperationResponse;
 import com.njust.po.PageParam;
 import com.njust.service.SampleService;
 import com.njust.vo.SampleVo;
-import com.njust.vo.TimeRangeVo;
+import com.njust.po.TimeRange;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -38,7 +38,7 @@ public class SampleController {
         params.formalize();
         OperationResponse response = new OperationResponse();
 
-        PageRequest pgReq = params.buildPageRequest("createTime");
+        PageRequest pgReq = params.buildPageRequest("sampleTime");
         Page<SampleVo> pgSamples = sampleService.findAll(pgReq);
 
         response.setPageAndBody(pgSamples);
@@ -52,13 +52,13 @@ public class SampleController {
         OperationResponse response = new OperationResponse();
 
         params.formalize();
-        PageRequest pgReq = params.buildPageRequest("createTime");
-        TimeRangeVo tr = null;
+        PageRequest pgReq = params.buildPageRequest("sampleTime");
+        TimeRange tr = null;
 
         try {
-            tr = (TimeRangeVo) params.getBody();
+            tr = (TimeRange) params.getBody();
         } catch (Exception e) {
-            log.error("cast " + JsonHelper.obj2Json(params.getBody()) + " to TimeRangeVo failed");
+            log.error("cast " + JsonHelper.obj2Json(params.getBody()) + " to TimeRange failed");
             response.setCode(ErrorCode.CODE_INPUT_PARAMS_ERROR);
             response.setMessage(ErrorCode.MSG_INPUT_PARAMS_ERROR);
         }

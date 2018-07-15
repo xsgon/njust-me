@@ -1,9 +1,9 @@
-package com.njust.vo;
+package com.njust.po;
 
 import lombok.Data;
 
 @Data
-public class TimeRangeVo {
+public class TimeRange {
     Long startTime;
     Long endTime;
 }

@@ -3,21 +3,23 @@ package com.njust.vo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.njust.model.user.Role;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Arrays;
 import java.util.Date;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 @Document(collection = "users")
-public class UserVo {
+public class UserVo extends BaseMongoDbVo{
 
-    @Id
-    private String _id;
-
+    @Field("id")
     private String id;
+
     private String name;
     private String password;
     private String email;

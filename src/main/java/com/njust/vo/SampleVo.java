@@ -1,17 +1,16 @@
 package com.njust.vo;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 @Document(collection = "sample")
-public class SampleVo {
-    @Id
-    private String _id;
+public class SampleVo extends BaseMongoDbVo {
 
     private String testId;
-//    private String sampleGroupId;
 
     private Long sampleTime;
     private String sampleWay;

@@ -36,7 +36,7 @@ public class TokenFilter extends GenericFilterBean {
 
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-        log.info("do token filter");
+//        log.info("do token filter");
 
         try {
             SecurityContextHolder.getContext().setAuthentication(null);

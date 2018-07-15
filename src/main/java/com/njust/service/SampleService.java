@@ -4,7 +4,7 @@ import com.njust.Exception.AlreadyExistsException;
 import com.njust.Exception.NotFoundException;
 import com.njust.repo.SampleRepo;
 import com.njust.vo.SampleVo;
-import com.njust.vo.TimeRangeVo;
+import com.njust.po.TimeRange;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +21,7 @@ public class SampleService {
         return sampleRepo.findAll(pageRequest);
     }
 
-    public Page<SampleVo> findAllByCreateTimeRange(TimeRangeVo timeRange, PageRequest pageRequest) {
+    public Page<SampleVo> findAllByCreateTimeRange(TimeRange timeRange, PageRequest pageRequest) {
         return sampleRepo.findAllByCreateTimeBetween(timeRange.getStartTime(),
                 timeRange.getEndTime(),
                 pageRequest);
