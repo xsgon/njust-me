@@ -1,4 +1,4 @@
-package com.njust.controller.user;
+package com.njust.controller;
 
 import com.njust.po.PageParam;
 import com.njust.service.UserService;

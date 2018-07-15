@@ -28,6 +28,12 @@ public class ErrorCode {
     public static final int CODE_USER_DISABLED = 10005;
     public static final String MSG_USER_DISABLED = "用户已被禁止访问，请联系管理员";
 
+    public static final int CODE_RECORD_EXISTS = 10006;
+    public static final String MSG_RECORD_EXISTS = "记录已存在";
+
+    public static final int CODE_RECORD_NOT_FOUND = 10007;
+    public static final String MSG_RECORD_NOT_FOUND = "记录未找到";
+
     public static final int CODE_DB_SOCKET_TIME_OUT = 20001;
     public static final String MSG_DB_SOCKET_TIME_OUT = "数据库socket连接异常，请重试";
 
