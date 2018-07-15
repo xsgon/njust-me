@@ -14,9 +14,8 @@ public class MainTestVo {
 
     private String testId;
     private String testObj;
-    private String sampleGroupId;
     private List<String> platformList;
-    private List<String> testPeople;
+    private List<String> testPeopleList;
     private String testLocation;
     private String testAttachment;
     private Long testStart;

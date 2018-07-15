@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class MongoKeepAlive {
 	@Autowired
-	private UserService userService;
+	private UsersRepo usersRepo;
 
 	/*
 	 * (cron="0 15 3 * * ?") cron一共有7位，但是最后一位是年，可以留空，所以我们可以写6位：
@@ -36,7 +36,7 @@ public class MongoKeepAlive {
     @Scheduled(fixedRate = 1000 * 20)
     private void keepConnAlive() {
 //	    log.info("ping");
-	    userService.getUserInfoByUserId("dummy");
+	    usersRepo.findBy_id("dummy");
     }
 
 }

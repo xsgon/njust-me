@@ -34,6 +34,9 @@ public class ErrorCode {
     public static final int CODE_RECORD_NOT_FOUND = 10007;
     public static final String MSG_RECORD_NOT_FOUND = "记录未找到";
 
+    public static final int CODE_INPUT_PARAMS_ERROR = 10008;
+    public static final String MSG_INPUT_PARAMS_ERROR = "参数传入错误，请联系开发人员";
+
     public static final int CODE_DB_SOCKET_TIME_OUT = 20001;
     public static final String MSG_DB_SOCKET_TIME_OUT = "数据库socket连接异常，请重试";
 

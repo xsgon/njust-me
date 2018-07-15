@@ -1,4 +1,4 @@
-package com.njust.common;
+package com.njust.Exception;
 
 import com.mongodb.MongoSocketReadTimeoutException;
 import lombok.extern.slf4j.Slf4j;

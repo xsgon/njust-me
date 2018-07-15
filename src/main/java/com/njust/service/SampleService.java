@@ -4,6 +4,7 @@ import com.njust.Exception.AlreadyExistsException;
 import com.njust.Exception.NotFoundException;
 import com.njust.repo.SampleRepo;
 import com.njust.vo.SampleVo;
+import com.njust.vo.TimeRangeVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,9 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class SampleService {
-//    @Autowired
-//    SampleGroupRepo sampleGroupRepo;
-
     @Autowired
     SampleRepo sampleRepo;
 
@@ -23,16 +21,11 @@ public class SampleService {
         return sampleRepo.findAll(pageRequest);
     }
 
-//    public SampleGroupVo addNewGroup(SampleGroupVo sg, String testId) throws Exception {
-//        if (sampleGroupRepo.findByTestId(testId) != null) {
-//            throw new RuntimeException("one test can only has one sample group");
-//        } else if (sg.get_id() != null && sampleGroupRepo.findBy_id(sg.get_id()) != null) {
-//            throw new AlreadyExistsException("sample group already exists");
-//        }
-//
-//        sg.set_id(null);
-//        return sampleGroupRepo.save(sg);
-//    }
+    public Page<SampleVo> findAllByCreateTimeRange(TimeRangeVo timeRange, PageRequest pageRequest) {
+        return sampleRepo.findAllByCreateTimeBetween(timeRange.getStartTime(),
+                timeRange.getEndTime(),
+                pageRequest);
+    }
 
     public SampleVo addNewSample(SampleVo sampleVo) throws AlreadyExistsException {
         if (sampleRepo.findBy_id(sampleVo.get_id()) != null) {

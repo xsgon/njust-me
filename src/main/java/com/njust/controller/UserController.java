@@ -7,7 +7,6 @@ import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,23 +47,20 @@ public class UserController {
         UserVo userVo = userService.getLoggedInUser();
         params.formalize();
 
-        Sort.Order timeOrder = new Sort.Order(Sort.Direction.DESC, "createTime");
-        Sort sort = new Sort(timeOrder);
-        PageRequest pgReq = new PageRequest(params.getPage(), params.getPageSize(), sort);
+        PageRequest pgReq = params.buildPageRequest("createTime");;
         Page<UserVo> pgUsers;
         if (userVo.getRole().equals(Role.ROLE_SUPER_ADMIN.name())) {
             pgUsers = userService.findAll(pgReq);
         } else {
             pgUsers = userService.findAllByRole(Role.ROLE_NORMAL.name(), pgReq);
         }
-        List<UserVo> users = new ArrayList<>(pgUsers.getContent());
-        for (UserVo u : users) {
+
+        for (UserVo u : pgUsers.getContent()) {
             u.hideSensitiveInfo();
         }
 
         OperationResponse response = new OperationResponse();
-        response.setPageInfo(pgUsers);
-        response.setBody(users);
+        response.setPageAndBody(pgUsers);
 
         return response;
     }

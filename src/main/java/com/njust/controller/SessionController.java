@@ -2,6 +2,7 @@ package com.njust.controller;
 
 import com.njust.model.response.ErrorCode;
 import com.njust.model.response.OperationResponse;
+import com.njust.po.PageParam;
 import com.njust.repo.UsersRepo;
 import com.njust.vo.UserVo;
 import io.swagger.annotations.*;
@@ -36,27 +37,8 @@ public class SessionController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Will return a security token, which must be passed in every request", response = OperationResponse.class)})
     @RequestMapping(value = "/session", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public OperationResponse newSession(@RequestBody Login login, HttpServletRequest request, HttpServletResponse response) {
-//        UserMapper user = userRepo.findOneByUserIdAndPassword(login.getUsername(), login.getPassword()).orElse(null);
-        log.error("received /session request");
-//        // 从数据库里得到
-//        UserVo user = usersRepo.findById(login.getUsername());
-//
-//        SessionResponse resp = new SessionResponse();
-//        SessionItem sessionItem = new SessionItem();
-//        if (user != null) {
-//            sessionItem.setToken("xxx.xxx.xxx");
-//            sessionItem.setUserId(user.getId());
-//            sessionItem.setEmail(user.getEmail());
-//            sessionItem.setRole(user.getRole());
-//
-//            resp.setCode(ErrorCode.CODE_SUCCESS);
-//            resp.setMessage("Dummy Login Success");
-//            resp.setItem(sessionItem);
-//        } else {
-//            resp.setCode(ErrorCode.CODE_AUTH_ERROR);
-//            resp.setMessage(ErrorCode.MSG_AUTH_ERROR);
-//        }
+    public OperationResponse newSession(@RequestBody PageParam param, HttpServletRequest request, HttpServletResponse response) {
+        log.error("received /session request");  // 仅测试用
         return new OperationResponse();
     }
 

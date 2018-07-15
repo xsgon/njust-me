@@ -29,10 +29,11 @@ public class OperationResponse {
         this.message = ErrorCode.MSG_SUCCESS;
     }
 
-    public void setPageInfo(Page<?> pageInfo) {
+    public void setPageAndBody(Page<?> pageInfo) {
         this.total = pageInfo.getTotalElements();
         this.totalPage = pageInfo.getTotalPages();
         this.page = pageInfo.getNumber();
         this.pageSize = pageInfo.getSize();
+        this.body = pageInfo.getContent();
     }
 }
