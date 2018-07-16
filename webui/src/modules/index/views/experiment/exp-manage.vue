@@ -6,9 +6,7 @@
                 <el-form-item>
                     <el-input v-model="filters.name" placeholder="实验编号"></el-input>
                 </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" v-on:click="getUsers">查询</el-button>
-                </el-form-item>
+
                 <el-form-item>
                     <el-button type="primary" @click="handleAdd">新增</el-button>
                 </el-form-item>
@@ -70,23 +68,35 @@
         <!--编辑界面-->
         <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
             <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-                <el-form-item label="姓名" prop="name">
-                    <el-input v-model="editForm.name" auto-complete="off"></el-input>
+                <el-form-item label="实验编号" prop="testId">
+                    <el-input v-model="editForm.testId" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="性别">
-                    <el-radio-group v-model="editForm.sex">
-                        <el-radio class="radio" :label="1">男</el-radio>
-                        <el-radio class="radio" :label="0">女</el-radio>
-                    </el-radio-group>
+                <el-form-item label="实验目的">
+                     <el-input v-model="editForm.testId" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="年龄">
-                    <el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>
+                <el-form-item label="样件数量">
+                    <el-input-number v-model="editForm.sampNum" :min="0" :max="200"></el-input-number>
                 </el-form-item>
-                <el-form-item label="生日">
-                    <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
+                <el-form-item label="样件编号">
+                    <el-input v-model="editForm.sampIds" auto-complete="off"></el-input>
+                 </el-form-item>
+                <el-form-item label="开始日期">
+                    <el-date-picker type="date" placeholder="选择日期" v-model="editForm.testStart"></el-date-picker>
                 </el-form-item>
-                <el-form-item label="地址">
-                    <el-input type="textarea" v-model="editForm.addr"></el-input>
+                <el-form-item label="结束日期">
+                    <el-date-picker type="date" placeholder="选择日期" v-model="editForm.endStart"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="实验设备">
+                    <el-input v-model="editForm.testEqp" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="实验人员">
+                    <el-input v-model="editForm.testPpl" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="实验地点">
+                    <el-input v-model="editForm.testLoc" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="实验结论">
+                    <el-input v-model="editForm.testConcl" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -96,26 +106,38 @@
         </el-dialog>
 
         <!--新增界面-->
-        <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+        <el-dialog title="添加用户" :visible.sync="addFormVisible" :close-on-click-modal="false">
             <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-                <el-form-item label="姓名" prop="name">
-                    <el-input v-model="addForm.name" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="性别">
-                    <el-radio-group v-model="addForm.sex">
-                        <el-radio class="radio" :label="1">男</el-radio>
-                        <el-radio class="radio" :label="0">女</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="年龄">
-                    <el-input-number v-model="addForm.age" :min="0" :max="200"></el-input-number>
-                </el-form-item>
-                <el-form-item label="生日">
-                    <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
-                </el-form-item>
-                <el-form-item label="地址">
-                    <el-input type="textarea" v-model="addForm.addr"></el-input>
-                </el-form-item>
+                <el-form-item label="实验编号" prop="testId">
+                                    <el-input v-model="editForm.testId" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="实验目的">
+                                     <el-input v-model="editForm.testId" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="样件数量">
+                                    <el-input-number v-model="editForm.sampNum" :min="0" :max="200"></el-input-number>
+                                </el-form-item>
+                                <el-form-item label="样件编号">
+                                    <el-input v-model="editForm.sampIds" auto-complete="off"></el-input>
+                                 </el-form-item>
+                                <el-form-item label="开始日期">
+                                    <el-date-picker type="date" placeholder="选择日期" v-model="editForm.testStart"></el-date-picker>
+                                </el-form-item>
+                                <el-form-item label="结束日期">
+                                    <el-date-picker type="date" placeholder="选择日期" v-model="editForm.endStart"></el-date-picker>
+                                </el-form-item>
+                                <el-form-item label="实验设备">
+                                    <el-input v-model="editForm.testEqp" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="实验人员">
+                                    <el-input v-model="editForm.testPpl" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="实验地点">
+                                    <el-input v-model="editForm.testLoc" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="实验结论">
+                                    <el-input v-model="editForm.testConcl" auto-complete="off"></el-input>
+                                </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="addFormVisible = false">取消</el-button>
@@ -127,12 +149,14 @@
 
 <script>
     import api from 'api/api';
+    import util from "../../../../common/js/util";
+
 
     export default {
         data() {
             return {
                 filters: {
-                    name: ''
+                    testObj: ''
                 },
                 mainTest: [],
                 total: 0,
@@ -145,42 +169,47 @@
                 editLoading: false,
                 editFormRules: {
                     name: [
-                        {required: true, message: '请输入姓名', trigger: 'blur'}
+                        {required: true, message: '请输入实验目标', trigger: 'blur'}
                     ]
                 },
                 //编辑界面数据
                 editForm: {
-                    id: 0,
-                    name: '',
-                    sex: -1,
-                    age: 0,
-                    birth: '',
-                    addr: ''
+                    testId:'',
+                                        testObj:'',
+                                        sampNum:0,
+                                        sampIds:'',
+                                        testStart:'',
+                                        testEnd:'',
+                                        testEqp:'',
+                                        testPpl:'',
+                                        testLoc:'',
+                                        testConcl:''
                 },
 
                 addFormVisible: false,//新增界面是否显示
                 addLoading: false,
                 addFormRules: {
                     name: [
-                        {required: true, message: '请输入姓名', trigger: 'blur'}
+                        {required: true, message: '请输入实验目的', trigger: 'blur'}
                     ]
                 },
                 //新增界面数据
                 addForm: {
-                    name: '',
-                    sex: -1,
-                    age: 0,
-                    birth: '',
-                    addr: ''
+                    testId:'',
+                    testObj:'',
+                    sampNum:0,
+                    sampIds:'',
+                    testStart:'',
+                    testEnd:'',
+                    testEqp:'',
+                    testPpl:'',
+                    testLoc:'',
+                    testConcl:''
                 }
 
             }
         },
         methods: {
-            // //性别显示转换
-            // formatSex: function (row, column) {
-            // 	return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
-            // },
             handleCurrentChange(val) {
                 this.page = val;
                 this.getMainTest();
@@ -193,7 +222,7 @@
             getMainTest() {
                 let para = {
                     page: this.page,
-                    name: this.filters.name
+                    testId: this.filters.testId
                 };
                 this.listLoading = true;
                 //NProgress.start();
@@ -215,7 +244,7 @@
                 }).then(() => {
                     this.listLoading = true;
                     //NProgress.start();
-                    let para = {id: row.id};
+                    let para = {id: row.testId};
                     removeUser(para).then((res) => {
                         this.listLoading = false;
                         //NProgress.done();
@@ -238,11 +267,16 @@
             handleAdd: function () {
                 this.addFormVisible = true;
                 this.addForm = {
-                    name: '',
-                    sex: -1,
-                    age: 0,
-                    birth: '',
-                    addr: ''
+                     testId:'',
+                     testObj:'',
+                     sampNum:0,
+                     sampIds:'',
+                     testStart:'',
+                     testEnd:'',
+                     testEqp:'',
+                     testPpl:'',
+                     testLoc:'',
+                     testConcl:''
                 };
             },
             //编辑
@@ -277,7 +311,9 @@
                             this.addLoading = true;
                             //NProgress.start();
                             let para = Object.assign({}, this.addForm);
-                            para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
+                            para.testStart = (!para.testStart || para.testStart == '') ? '' : util.formatDate.format(new Date(para.testStart), 'yyyy-MM-dd');
+                            para.testEnd = (!para.testEnd || para.testEnd == '') ? '' : util.formatDate.format(new Date(para.testEnd), 'yyyy-MM-dd');
+
                             addUser(para).then((res) => {
                                 this.addLoading = false;
                                 //NProgress.done();
@@ -298,7 +334,7 @@
             },
             //批量删除
             batchRemove: function () {
-                var ids = this.sels.map(item => item.id).toString();
+                var ids = this.sels.map(item => item.testId).toString();
                 this.$confirm('确认删除选中记录吗？', '提示', {
                     type: 'warning'
                 }).then(() => {
