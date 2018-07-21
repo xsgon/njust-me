@@ -9,7 +9,11 @@ package com.njust.model.response;
 
 import io.swagger.annotations.*;
 import lombok.*;
+import org.json.JSONObject;
 import org.springframework.data.domain.Page;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Data //for getters and setters
 public class OperationResponse {
@@ -35,5 +39,14 @@ public class OperationResponse {
         this.page = pageInfo.getNumber();
         this.pageSize = pageInfo.getSize();
         this.body = pageInfo.getContent();
+    }
+
+    public void response2Client(HttpServletResponse response) throws IOException {
+        response.setCharacterEncoding("utf8");
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().write(JSONObject.valueToString(this));
+        response.getWriter().flush();
+        response.getWriter().close();
     }
 }

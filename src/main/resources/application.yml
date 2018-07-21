@@ -4,8 +4,8 @@ server:
      port: 9119
 
 # comment bellowing out to enable jwt security
-security:
-    ignored=/**
+#security:
+#    ignored=/**
 
 
 spring:
