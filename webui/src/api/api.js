@@ -1,5 +1,11 @@
 // import cryptoWrapper from 'common/js/cryptoWrapper'
 import axios from 'axios'
+/*
+normal page param format
+private int page;
+private int pageSize;
+private Object body;
+ */
 
 let genHeader = () => {
     return {

@@ -6,6 +6,7 @@ import com.njust.Utils.FileTypeHelper;
 import com.njust.model.file.GridFileInfo;
 import com.njust.model.response.ErrorCode;
 import com.njust.model.response.OperationResponse;
+import com.njust.po.PageParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -21,6 +22,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -38,6 +40,7 @@ public class FileStorageController {
     @ApiOperation(value = "upload a file", notes = "", response = OperationResponse.class)
     @ApiResponses(value = { @ApiResponse(code = 200, message = "upload a file.", response = OperationResponse.class) })
     @RequestMapping(value="/upload", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RolesAllowed({"ADMIN", "SUPER_ADMIN"})
     public OperationResponse upload(@RequestParam("file") MultipartFile file) {
         InputStream inputStream = null;
         OperationResponse operationResponse = new OperationResponse();
@@ -98,6 +101,18 @@ public class FileStorageController {
         }
     }
 
+    @ApiOperation(value = "delete a file", notes = "", response = OperationResponse.class)
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "delete a file.", response = OperationResponse.class) })
+    @RequestMapping(value="/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RolesAllowed({"ADMIN", "SUPER_ADMIN"})
+    public OperationResponse delete(@RequestBody PageParam param) {
+        String fileName = (String) param.getBodyMap().get("fileName");
+        if (!StringUtils.isEmpty(fileName)) {
+            gridFsTemplate.delete(new Query().addCriteria(Criteria.where("filename").is(fileName)));
+        }
+
+        return new OperationResponse();
+    }
 
     private boolean previewSimpleFile(GridFSDBFile fs, HttpServletResponse response) {
         boolean success = true;
