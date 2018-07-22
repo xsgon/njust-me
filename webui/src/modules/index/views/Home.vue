@@ -14,8 +14,7 @@
                     <span class="el-dropdown-link userinfo-inner"><img
                             :src="this.sysUserAvatar"/> {{sysUserName}}</span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>我的消息</el-dropdown-item>
-                        <el-dropdown-item>设置</el-dropdown-item>
+                        <el-dropdown-item @click.native="handleProfile">个人信息</el-dropdown-item>
                         <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -65,6 +64,22 @@
                 </div>
             </section>
         </el-col>
+        <!--个人信息编辑界面-->
+        <el-dialog title="个人信息" :visible="editFormVisible" :close-on-click-modal="false">
+            <el-form :model="editFrom" label-width="80px" :rules="editFormRules" ref="editFrom">
+                <el-form-item label="姓名" prop="name">
+                    <el-input v-model="editFrom.name" auto-complete="off"></el-input>
+                </el-form-item>
+
+                <el-form-item label="电话" prop="phone">
+                    <el-input prefix-icon="el-icon-phone" v-model="editFrom.phone"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="editFormVisible = false">取消</el-button>
+                <el-button type="primary" @click.native="addSubmit" :loading="editLoading">提交</el-button>
+            </div>
+        </el-dialog>
     </el-row>
 </template>
 
@@ -86,7 +101,27 @@
                     type: [],
                     resource: '',
                     desc: ''
-                }
+                },
+
+                // 编辑
+                editLoading: false,
+                editFormVisible: false,
+                editFrom: {
+                    name: '',
+                    phone: '',
+                },
+
+                // 编辑界面的数据校验
+                editFormRules: {
+                    // 姓名校验
+                    name: [
+                        {required: true, message: '请输入姓名', trigger: 'blur'}
+                    ],
+                    // 手机号校验
+                    phone: [
+                        {required: true, validator: common.phoneValidator, trigger: 'blur'}
+                    ],
+                },
             }
         },
         methods: {
@@ -130,7 +165,45 @@
             },
             showMenu(i, status) {
                 this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-' + i)[0].style.display = status ? 'block' : 'none';
-            }
+            },
+            // 显示个人信息
+            handleProfile: function() {
+                let user = SESSION.fetchUser();
+                this.editFormVisible = true;
+                this.editFrom = {
+                    name: user.name,
+                    phone: user.phone,
+                }
+            },
+            // 提交个人信息
+            addSubmit: function () {
+                this.$refs.editFrom.validate((valid) => {
+                    if (valid) {
+                        this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                            this.editLoading = true;
+                            //NProgress.start();
+                            let para = Object.assign({}, this.editFrom);
+                            api.updateSelf(para).then((res) => {
+                                this.editLoading = false;
+                                common.handleReturn(res,
+                                    (res) => {
+                                        let user = SESSION.fetchUser();
+                                        user.name = para.name;
+                                        user.phone = para.phone;
+                                        SESSION.storeUser(user);
+                                        this.sysUserName = user.name;
+
+                                        this.editFormVisible = false;
+                                        common.toastMsg('更新个人信息成功', 'success');
+                                    })
+                            }).catch((error) => {
+                                this.editLoading = false;
+                                common.handleNWException(error)
+                            });
+                        });
+                    }
+                });
+            },
         },
         mounted() {
             let user = SESSION.fetchUser();

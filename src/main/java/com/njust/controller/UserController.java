@@ -1,5 +1,6 @@
 package com.njust.controller;
 
+import com.njust.Exception.AlreadyExistsException;
 import com.njust.po.PageParam;
 import com.njust.service.UserService;
 import com.njust.vo.UserVo;
@@ -102,11 +103,17 @@ public class UserController {
             userVo.setActive(1);
             userVo.setPassword(new BCryptPasswordEncoder().encode(userVo.getPassword()));
 
-            int num = userService.addNewUser(userVo);
-
-            if (num == 0) {
+            UserVo u = null;
+            try {
+                u = userService.addNewUser(userVo);
+            } catch (AlreadyExistsException e) {
                 response.setCode(ErrorCode.CODE_USER_EXISTS);
                 response.setMessage(ErrorCode.MSG_USER_EXISTS);
+            }
+
+            if (u == null) {
+                response.setCode(ErrorCode.CODE_SYSTEM_ERROR);
+                response.setMessage(ErrorCode.MSG_SYSTEM_ERROR);
             }
         }
 
@@ -154,8 +161,8 @@ public class UserController {
             userVo.set_id(dbUser.get_id());
             userVo.setUpdateTime(System.currentTimeMillis());
 
-            num = userService.updateUser(userVo);
-            if (num != 1) {
+            UserVo u = userService.updateUser(userVo);
+            if (u == null) {
                 response.setCode(ErrorCode.CODE_UPDATE_USER_FAILED);
                 response.setMessage(ErrorCode.MSG_UPDATE_USER_FAILED);
             }
@@ -198,6 +205,24 @@ public class UserController {
         } else {
             userVo.set_id(dbUser.get_id());
             userService.deleteUser(userVo);
+        }
+
+        return response;
+    }
+
+    @ApiOperation(value = "update self profile", response = OperationResponse.class)
+    @RequestMapping(value = "/update/self", method = RequestMethod.POST, produces = {"application/json"})
+    public OperationResponse updateSelf(@RequestBody UserVo userVo) {
+        OperationResponse response = new OperationResponse();
+        UserVo currUser = userService.getLoggedInUser();
+        currUser.setPhone(userVo.getPhone());
+        currUser.setName(userVo.getName());
+
+        UserVo dbUser = userService.updateUser(currUser);
+        if (dbUser == null) {
+            log.error("update user " + currUser.getId() + " failed");
+            response.setCode(ErrorCode.CODE_SYSTEM_ERROR);
+            response.setMessage(ErrorCode.MSG_SYSTEM_ERROR);
         }
 
         return response;

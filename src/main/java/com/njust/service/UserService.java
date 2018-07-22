@@ -1,5 +1,6 @@
 package com.njust.service;
 
+import com.njust.Exception.AlreadyExistsException;
 import com.njust.repo.UsersRepo;
 import com.njust.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
@@ -39,22 +40,18 @@ public class UserService {
 	}
 
 
-	public int addNewUser(UserVo user) {
+	public UserVo addNewUser(UserVo user) throws AlreadyExistsException {
         UserVo oldUser = this.getUserInfoByUserId(user.getId());
-        log.info("old user is " + oldUser);
-		if (oldUser == null){
-		    UserVo dbUser = usersRepo.insert(user);
-		    log.info("new user is " + dbUser);
-		    return 1;
-		}
 
-		return 0;
+		if (oldUser != null) {
+		    throw new AlreadyExistsException("用户ID已存在");
+        }
+
+		return usersRepo.insert(user);
 	}
 
-    public int updateUser(UserVo user) {
-        UserVo dbUser = usersRepo.save(user);
-        log.info("now user is " + dbUser);
-        return 1;
+    public UserVo updateUser(UserVo user) {
+        return usersRepo.save(user);
     }
 
     public void deleteUser(UserVo userVo) {

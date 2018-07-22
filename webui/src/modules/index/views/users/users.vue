@@ -16,7 +16,7 @@
         </el-col>
 
         <!--列表-->
-        <el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange"
+        <el-table :data="users" highlight-current-row stripe v-loading="listLoading" @selection-change="selsChange"
                   style="width: 100%;">
             <el-table-column type="selection" width="55">
             </el-table-column>
@@ -28,9 +28,11 @@
             </el-table-column>
             <el-table-column prop="role" label="角色" width="100" :formatter="formatRole">
             </el-table-column>
-            <el-table-column prop="phone" label="手机" width="150" sortable>
+            <el-table-column prop="phone" label="手机" width="150">
             </el-table-column>
-            <el-table-column label="操作" fixed="right">
+            <el-table-column prop="createTime" label="创建时间" :formatter="formatTime" sortable>
+            </el-table-column>
+            <el-table-column label="操作" width="250"  fixed="right">
                 <template scope="scope">
                     <el-button size="small" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                     <el-button size="small" type="text" @click="handlePasswordReset(scope.$index, scope.row)">重置密码
@@ -121,7 +123,6 @@
     //import NProgress from 'nprogress'
     import api from 'api/api';
     import ROLE from "../../../../common/role-define";
-    import util from "../../../../common/js/util";
 
     export default {
         data() {
@@ -204,6 +205,15 @@
             //角色显示转换
             formatRole: function (row, column) {
                 return ROLE[row.role];
+            },
+            formatTime: function (row, column) {
+                //return ROLE[row.role];
+                if (row.createTime !== undefined) {
+                    return new Date(row.createTime).Format("yyyy-MM-dd hh:mm:ss");
+                } else {
+                    return "未知";
+                }
+
             },
             handleCurrentChange(val) {
                 this.page = val;

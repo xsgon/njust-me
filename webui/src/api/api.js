@@ -19,6 +19,7 @@ let URL_SESSION = '/session';
 let URL_MAIN_TEST_READ_ALL = '/main_test/read/all';
 
 let URL_USER_READ_ALL = '/user/read/all';
+let URL_USER_UPDATE_SELF_PROFILE = '/user/update/self';
 
 let URL_ADD_USER = '/user/add/new_user';
 
@@ -49,6 +50,11 @@ api.getUserList = (params) => {
 api.addUser = (params) => {
     return axios.post(urlHost + URL_ADD_USER, params, genHeader());
 };
+
+api.updateSelf = (params) => {
+    return axios.post(urlHost + URL_USER_UPDATE_SELF_PROFILE, params, genHeader());
+};
+
 
 export default api;
 
