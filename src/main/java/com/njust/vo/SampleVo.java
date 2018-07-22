@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class SampleVo extends BaseMongoDbVo {
 
     private String testId;
-
+    private String sampleId;
     private Long sampleTime;
     private String sampleWay;
     private String companyName;
@@ -31,7 +31,7 @@ public class SampleVo extends BaseMongoDbVo {
     private Float nutDg6;
     private Float nutD1;
     private Float nutB;
-    private Float nulL1;
+    private Float nutL1;
     private Float nutM;
     private Float ca;
     private Float coa;
@@ -39,7 +39,7 @@ public class SampleVo extends BaseMongoDbVo {
     private Integer dn0;
     private String cycleModel;
     private String nutType;
-    private Boolean preLoad;
+    private Boolean preload;
     private Boolean selfLub;
     private String special;
 

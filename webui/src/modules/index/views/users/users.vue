@@ -30,7 +30,7 @@
             </el-table-column>
             <el-table-column prop="phone" label="手机" width="150">
             </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" :formatter="formatTime" sortable>
+            <el-table-column prop="createTime" label="创建时间" :formatter="timeFormatter" sortable>
             </el-table-column>
             <el-table-column label="操作" width="250"  fixed="right">
                 <template scope="scope">
@@ -206,15 +206,15 @@
             formatRole: function (row, column) {
                 return ROLE[row.role];
             },
-            formatTime: function (row, column) {
-                //return ROLE[row.role];
-                if (row.createTime !== undefined) {
-                    return new Date(row.createTime).Format("yyyy-MM-dd hh:mm:ss");
+            //时间转换
+            timeFormatter: (row, column, cellValue, index) => {
+                if (cellValue !== undefined) {
+                    return new Date(cellValue).Format("yyyy-MM-dd hh:mm:ss");
                 } else {
                     return "未知";
                 }
-
             },
+
             handleCurrentChange(val) {
                 this.page = val;
                 this.getUsers();
@@ -233,13 +233,6 @@
                     //name: this.filters.name
                 };
                 this.listLoading = true;
-                //NProgress.start();
-                // getUserListPage(para).then((res) => {
-                // 	this.total = res.data.total;
-                // 	this.users = res.data.users;
-                // 	this.listLoading = false;
-                // 	//NProgress.done();
-                // });
                 api.getUserList(para)
                     .then((res) => {
                         common.handleReturn(res, (res) => {
