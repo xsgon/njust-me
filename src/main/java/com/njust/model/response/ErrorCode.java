@@ -46,6 +46,9 @@ public class ErrorCode {
     public static final int CODE_FILE_NOT_EXISTS = 10011;
     public static final String MSG_FILE_NOT_EXISTS = "文件不存在";
 
+    public static final int CODE_INVALID_NAME_PATTERN = 10012;
+    public static final String MSG_INVALID_NAME_PATTERN = "命名格式错误";
+
     public static final int CODE_DB_SOCKET_TIME_OUT = 20001;
     public static final String MSG_DB_SOCKET_TIME_OUT = "数据库socket连接异常，请重试";
 

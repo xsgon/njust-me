@@ -47,7 +47,7 @@ public class SampleController {
 
     @ApiOperation(value = "get all sample in time range", notes = "", response = OperationResponse.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Returns all samples in time range.", response = OperationResponse.class)})
-    @RequestMapping(value = "/read/all_by_createTime")
+    @RequestMapping(value = "/read/all_by_sample_time")
     public OperationResponse getAllByCreateTimeRange(@RequestBody PageParam params) {
         OperationResponse response = new OperationResponse();
 
@@ -59,13 +59,14 @@ public class SampleController {
             tr = (TimeRange) params.getBody();
         } catch (Exception e) {
             log.error("cast " + JsonHelper.obj2Json(params.getBody()) + " to TimeRange failed");
-            response.setCode(ErrorCode.CODE_INPUT_PARAMS_ERROR);
-            response.setMessage(ErrorCode.MSG_INPUT_PARAMS_ERROR);
         }
 
         if (tr != null) {
             Page<SampleVo> sampleVos = sampleService.findAllByCreateTimeRange(tr, pgReq);
             response.setPageAndBody(sampleVos);
+        } else {
+            response.setCode(ErrorCode.CODE_INPUT_PARAMS_ERROR);
+            response.setMessage(ErrorCode.MSG_INPUT_PARAMS_ERROR);
         }
 
         return response;
@@ -99,7 +100,7 @@ public class SampleController {
         Boolean ret = sampleService.deleteSample(sampleVo);
         if (!ret) {
             response.setCode(ErrorCode.CODE_SYSTEM_ERROR);
-            response.setMessage("删除样本[" + sampleVo.get_id() + "]出错，请联系开发人员");
+            response.setMessage(ErrorCode.MSG_SYSTEM_ERROR + "删除样本[" + sampleVo.get_id() + "]出错，请联系开发人员");
         }
         return response;
     }
