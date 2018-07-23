@@ -77,6 +77,22 @@
                 <el-form-item label="样件数量">
                     <el-input-number v-model="editForm.sampNum" :min="0" :max="200"></el-input-number>
                 </el-form-item>
+                <el-select
+                    v-model="value9"
+                    multiple
+                    filterable
+                    remote
+                    reserve-keyword
+                    placeholder="请输入样件编码"
+                    :remote-method="remoteMethod"
+                    :loading="loading">
+                    <el-option
+                      v-for="item in options4"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
                 <el-form-item label="样件编号">
                     <el-input v-model="editForm.sampIds" auto-complete="off"></el-input>
                  </el-form-item>
@@ -106,7 +122,7 @@
         </el-dialog>
 
         <!--新增界面-->
-        <el-dialog title="添加用户" :visible.sync="addFormVisible" :close-on-click-modal="false">
+        <el-dialog title="添加实验大纲" :visible.sync="addFormVisible" :close-on-click-modal="false">
             <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
                 <el-form-item label="实验编号" prop="testId">
                                     <el-input v-model="editForm.testId" auto-complete="off"></el-input>
@@ -117,6 +133,22 @@
                                 <el-form-item label="样件数量">
                                     <el-input-number v-model="editForm.sampNum" :min="0" :max="200"></el-input-number>
                                 </el-form-item>
+                                                <el-select
+                                                    v-model="value9"
+                                                    multiple
+                                                    filterable
+                                                    remote
+                                                    reserve-keyword
+                                                    placeholder="请输入样件编码"
+                                                    :remote-method="remoteMethod"
+                                                    :loading="loading">
+                                                    <el-option
+                                                      v-for="item in options4"
+                                                      :key="item.value"
+                                                      :label="item.label"
+                                                      :value="item.value">
+                                                    </el-option>
+                                                  </el-select>
                                 <el-form-item label="样件编号">
                                     <el-input v-model="editForm.sampIds" auto-complete="off"></el-input>
                                  </el-form-item>
@@ -155,6 +187,12 @@
     export default {
         data() {
             return {
+                options4: [],
+                value9: [],
+                list: [],
+                        loading: false,
+                        states: ["YZ001", "LS001", "LS002",
+                        "LS003"],
                 filters: {
                     testObj: ''
                 },
@@ -206,6 +244,9 @@
                     testLoc:'',
                     testConcl:''
                 }
+
+
+
 
             }
         },
@@ -353,10 +394,28 @@
                 }).catch(() => {
 
                 });
-            }
+            },
+
+                        remoteMethod(query) {
+                                if (query !== '') {
+                                  this.loading = true;
+                                  setTimeout(() => {
+                                    this.loading = false;
+                                    this.options4 = this.list.filter(item => {
+                                      return item.label.toLowerCase()
+                                        .indexOf(query.toLowerCase()) > -1;
+                                    });
+                                  }, 200);
+                                } else {
+                                  this.options4 = [];
+                                }
+                              }
         },
         mounted() {
             this.getMainTest();
+            this.list = this.states.map(item => {
+                                return { value: item, label: item };
+                              })
         }
     }
 
