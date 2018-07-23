@@ -4,7 +4,7 @@
         <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
             <el-form :inline="true" :model="filters">
                 <el-form-item>
-                    <el-input v-model="filters.platId" placeholder="设备编号"></el-input>
+                    <el-input v-model="filters.sampleId" placeholder="样件编号"></el-input>
                 </el-form-item>
 
                 <el-form-item>
@@ -20,17 +20,67 @@
             </el-table-column>
             <el-table-column type="index" width="60">
             </el-table-column>
-            <el-table-column prop="platId" label="设备编号" width="120" sortable>
+            <el-table-column prop="sampleId" label="样件编号" width="120" sortable>
             </el-table-column>
-            <el-table-column prop="platName" label="设备名称" width="100">
+            <el-table-column prop="sampleTime" label="采样时间" min-width="180">
             </el-table-column>
-            <el-table-column prop="platOwner" label="设备责任人" width="100">
+            <el-table-column prop="sampleWay" label="采样方式" width="120">
             </el-table-column>
-            <el-table-column prop="platFactory" label="设备厂家" width="100">
+            <el-table-column prop="sampleCompany" label="公司名称" width="100">
             </el-table-column>
-            <el-table-column prop="platStartDate" label="出厂日期" min-width="180">
+            <el-table-column prop="sampleMode" label="型号" width="100">
             </el-table-column>
-            <el-table-column prop="platDetail" label="设备描述" min-width="180">
+            <el-table-column prop="threadLen" label="螺纹长度" width="100">
+            </el-table-column>
+            <el-table-column prop="wholeLen" label="总长度" width="100">
+            </el-table-column>
+            <el-table-column prop="d0" label="公称直径" width="100">
+            </el-table-column>
+            <el-table-column prop="ph0" label="导程" width="100">
+            </el-table-column>
+             <el-table-column prop="d1" label="最小底径" width="100">
+             </el-table-column>
+            <el-table-column prop="dw" label="钢球直径" width="100">
+            </el-table-column>
+            <el-table-column prop="d2" label="外径" width="100">
+            </el-table-column>
+             <el-table-column prop="ballCircle" label="反向结构数量" width="100">
+             </el-table-column>
+            <el-table-column prop="ballList" label="滚动体有效圈数" width="100">
+            </el-table-column>
+             <el-table-column prop="beta" label="螺纹升角" width="100">
+             </el-table-column>
+            <el-table-column prop="r" label="丝杆滚道设计半径" width="100">
+            </el-table-column>
+            <el-table-column prop="alfa" label="接触角" width="100">
+            </el-table-column>
+             <el-table-column prop="nutDg6" label="螺母体外径" width="100">
+             </el-table-column>
+            <el-table-column prop="nutD1" label="螺母法兰外径" width="100">
+            </el-table-column>
+             <el-table-column prop="nutB" label="螺母法兰厚度" width="100">
+             </el-table-column>
+            <el-table-column prop="nutL1" label="螺母总长度" width="100">
+            </el-table-column>
+            <el-table-column prop="nutM" label="螺钉孔尺寸" width="100">
+            </el-table-column>
+             <el-table-column prop="ca" label="额定动载荷" width="100">
+             </el-table-column>
+            <el-table-column prop="coa" label="额定静载荷" width="100">
+            </el-table-column>
+            <el-table-column prop="k" label="标称刚性" width="100">
+            </el-table-column>
+             <el-table-column prop="dn0" label="DN值" width="100">
+             </el-table-column>
+            <el-table-column prop="cycleModel" label="循环类型" width="100">
+            </el-table-column>
+            <el-table-column prop="netType" label="螺母类型" width="100">
+            </el-table-column>
+             <el-table-column prop="preLoad" label="预紧等级" width="100">
+             </el-table-column>
+            <el-table-column prop="selfLub" label="是否自润滑" width="100">
+            </el-table-column>
+            <el-table-column prop="spclDesc" label="特殊说明" min-width="180">
             </el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
                 <template scope="scope">
@@ -60,24 +110,25 @@
         <!--编辑界面-->
         <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
             <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-                <el-form-item label="设备编号" prop="platId">
+                <el-form-item label="样件编码" prop="sampleId">
                     <el-input v-model="editForm.platId" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="设备名称">
-                     <el-input v-model="editForm.platName" auto-complete="off"></el-input>
+                <el-form-item label="采样时间">
+                    <el-date-picker type="date" placeholder="选择日期" v-model="editForm.sampleTime"></el-date-picker>
                 </el-form-item>
-                <el-form-item label="设备责任人">
-                    <el-input-number v-model="editForm.platOwner" :min="0" :max="200"></el-input-number>
+                <el-form-item label="采样方式">
+                    <el-input v-model="editForm.sampleWay" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="设备厂家">
-                    <el-input v-model="editForm.platFactory" auto-complete="off"></el-input>
+                <el-form-item label="公司名称">
+                    <el-input v-model="editForm.sampleCompany" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="型号">
+                     <el-input v-model="editForm.sampleMode" auto-complete="off"></el-input>
                  </el-form-item>
-                <el-form-item label="出厂日期">
-                    <el-date-picker type="date" placeholder="选择日期" v-model="editForm.platStartDate"></el-date-picker>
-                </el-form-item>
-                <el-form-item label="设备描述">
-                    <el-input v-model="editForm.platDetail" auto-complete="off"></el-input>
-                </el-form-item>
+                 <el-form-item label="螺纹长度">
+                    <el-input v-model="editForm.threadLen" auto-complete="off"></el-input>
+                 </el-form-item>
+
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -88,24 +139,24 @@
         <!--新增界面-->
         <el-dialog title="添加设备" :visible.sync="addFormVisible" :close-on-click-modal="false">
             <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-                <el-form-item label="设备编号" prop="platId">
-                    <el-input v-model="editForm.testId" auto-complete="off"></el-input>
+                <el-form-item label="样件编码" prop="sampleId">
+                    <el-input v-model="editForm.platId" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="设备名称">
-                     <el-input v-model="editForm.platName" auto-complete="off"></el-input>
+                <el-form-item label="采样时间">
+                    <el-date-picker type="date" placeholder="选择日期" v-model="editForm.sampleTime"></el-date-picker>
                 </el-form-item>
-                <el-form-item label="设备责任人">
-                     <el-input v-model="editForm.platOwner" ></el-input>
+                <el-form-item label="采样方式">
+                    <el-input v-model="editForm.sampleWay" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="设备厂家">
-                     <el-input v-model="editForm.platFactory" ></el-input>
+                <el-form-item label="公司名称">
+                    <el-input v-model="editForm.sampleCompany" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="出厂日期">
-                     <el-date-picker type="date" placeholder="选择日期" v-model="editForm.platStartDate"></el-date-picker>
-                </el-form-item>
-                <el-form-item label="设备描述">
-                     <el-input v-model="editForm.platDetail" auto-complete="off"></el-input>
-                </el-form-item>
+                <el-form-item label="型号">
+                     <el-input v-model="editForm.sampleMode" auto-complete="off"></el-input>
+                 </el-form-item>
+                 <el-form-item label="螺纹长度">
+                    <el-input v-model="editForm.threadLen" auto-complete="off"></el-input>
+                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="addFormVisible = false">取消</el-button>
@@ -142,12 +193,12 @@
                 },
                 //编辑界面数据
                 editForm: {
-                    platId:'',
-                    platName:'',
-                    platOwner:'',
-                    platFactory:'',
-                    platStartDate:'',
-                    platDetail:''
+                    sampleId:'',
+                    sampleTime:'',
+                    sampleWay:'',
+                    sampleCompany:'',
+                    sampleMode:'',
+                    threadLen:''
                 },
 
                 addFormVisible: false,//新增界面是否显示
@@ -159,12 +210,12 @@
                 },
                 //新增界面数据
                 addForm: {
-                    platId:'',
-                    platName:'',
-                    platOwner:'',
-                    platFactory:'',
-                    platStartDate:'',
-                    platDetail:''
+                    sampleId:'',
+                    sampleTime:'',
+                    sampleWay:'',
+                    sampleCompany:'',
+                    sampleMode:'',
+                    threadLen:''
                 }
 
             }
@@ -204,7 +255,7 @@
                 }).then(() => {
                     this.listLoading = true;
                     //NProgress.start();
-                    let para = {id: row.platId};
+                    let para = {id: row.sampleId};
                     removeUser(para).then((res) => {
                         this.listLoading = false;
                         //NProgress.done();
@@ -227,12 +278,12 @@
             handleAdd: function () {
                 this.addFormVisible = true;
                 this.addForm = {
-                    platId:'',
-                    platName:'',
-                    platOwner:'',
-                    platFactory:'',
-                    platStartDate:'',
-                    platDetail:''
+                    sampleId:'',
+                    sampleTime:'',
+                    sampleWay:'',
+                    sampleCompany:'',
+                    sampleMode:'',
+                    threadLen:''
                 };
             },
             //编辑
@@ -289,7 +340,7 @@
             },
             //批量删除
             batchRemove: function () {
-                var ids = this.sels.map(item => item.platId).toString();
+                var ids = this.sels.map(item => item.sampleId).toString();
                 this.$confirm('确认删除选中记录吗？', '提示', {
                     type: 'warning'
                 }).then(() => {
