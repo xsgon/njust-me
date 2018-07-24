@@ -22,6 +22,8 @@ let URL_USER_READ_ALL = '/user/read/all';
 let URL_USER_UPDATE_SELF_PROFILE = '/user/update/self';
 let URL_USER_ADD_NEW = '/user/add/new_user';
 
+let URL_EXP_ADD_NEW = '/main_test/add/test';
+
 let URL_SAMPLE_READ_ALL = '/sample/read/all';
 
 let rootIP = process.env.API_ROOT;
@@ -59,6 +61,11 @@ api.updateSelf = (params) => {
 api.getSampleList = (params) => {
     return axios.post(urlHost + URL_SAMPLE_READ_ALL, params, genHeader());
 };
+
+api.addExp = (params) => {
+    return axios.post(urlHost + URL_EXP_ADD_NEW, params, genHeader());
+};
+
 export default api;
 
 export const getUserList = params => {

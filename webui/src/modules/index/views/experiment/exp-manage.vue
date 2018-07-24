@@ -77,24 +77,23 @@
                 <el-form-item label="样件数量">
                     <el-input-number v-model="editForm.sampNum" :min="0" :max="200"></el-input-number>
                 </el-form-item>
-                <el-select
-                    v-model="value9"
-                    multiple
-                    filterable
-                    remote
-                    reserve-keyword
-                    placeholder="请输入样件编码"
-                    :remote-method="remoteMethod"
-                    :loading="loading">
-                    <el-option
-                      v-for="item in options4"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
                 <el-form-item label="样件编号">
-                    <el-input v-model="editForm.sampIds" auto-complete="off"></el-input>
+                       <el-select
+                                    v-model="editForm.sampIds"
+                                    multiple
+                                    filterable
+                                    remote
+                                    reserve-keyword
+                                    placeholder="请输入样件编码"
+                                    :remote-method="remoteMethod"
+                                    :loading="loading">
+                                    <el-option
+                                      v-for="item in options4"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                    </el-option>
+                        </el-select>
                  </el-form-item>
                 <el-form-item label="开始日期">
                     <el-date-picker type="date" placeholder="选择日期" v-model="editForm.testStart"></el-date-picker>
@@ -128,47 +127,43 @@
                                     <el-input v-model="editForm.testId" auto-complete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item label="实验目的">
-                                     <el-input v-model="editForm.testId" auto-complete="off"></el-input>
+                                     <el-input v-model="editForm.testObj" auto-complete="off"></el-input>
                                 </el-form-item>
-                                <el-form-item label="样件数量">
-                                    <el-input-number v-model="editForm.sampNum" :min="0" :max="200"></el-input-number>
-                                </el-form-item>
-                                                <el-select
-                                                    v-model="value9"
-                                                    multiple
-                                                    filterable
-                                                    remote
-                                                    reserve-keyword
-                                                    placeholder="请输入样件编码"
-                                                    :remote-method="remoteMethod"
-                                                    :loading="loading">
-                                                    <el-option
-                                                      v-for="item in options4"
-                                                      :key="item.value"
-                                                      :label="item.label"
-                                                      :value="item.value">
-                                                    </el-option>
-                                                  </el-select>
                                 <el-form-item label="样件编号">
-                                    <el-input v-model="editForm.sampIds" auto-complete="off"></el-input>
+                                <el-select
+                                                                                    v-model="editForm.sampleList"
+                                                                                    multiple
+                                                                                    filterable
+                                                                                    remote
+                                                                                    reserve-keyword
+                                                                                    placeholder="请输入样件编码"
+                                                                                    :remote-method="remoteMethod"
+                                                                                    :loading="loading">
+                                                                                    <el-option
+                                                                                      v-for="item in options4"
+                                                                                      :key="item.value"
+                                                                                      :label="item.label"
+                                                                                      :value="item.value">
+                                                                                    </el-option>
+                                </el-select>
                                  </el-form-item>
                                 <el-form-item label="开始日期">
                                     <el-date-picker type="date" placeholder="选择日期" v-model="editForm.testStart"></el-date-picker>
                                 </el-form-item>
                                 <el-form-item label="结束日期">
-                                    <el-date-picker type="date" placeholder="选择日期" v-model="editForm.endStart"></el-date-picker>
+                                    <el-date-picker type="date" placeholder="选择日期" v-model="editForm.testEnd"></el-date-picker>
                                 </el-form-item>
                                 <el-form-item label="实验设备">
-                                    <el-input v-model="editForm.testEqp" auto-complete="off"></el-input>
+                                    <el-input v-model="editForm.platformList" auto-complete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item label="实验人员">
-                                    <el-input v-model="editForm.testPpl" auto-complete="off"></el-input>
+                                    <el-input v-model="editForm.testPeopleList" auto-complete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item label="实验地点">
-                                    <el-input v-model="editForm.testLoc" auto-complete="off"></el-input>
+                                    <el-input v-model="editForm.testLocation" auto-complete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item label="实验结论">
-                                    <el-input v-model="editForm.testConcl" auto-complete="off"></el-input>
+                                    <el-input v-model="editForm.testAttachment" auto-complete="off"></el-input>
                                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -188,7 +183,7 @@
         data() {
             return {
                 options4: [],
-                value9: [],
+                sampleIds: [],
                 list: [],
                         loading: false,
                         states: ["YZ001", "LS001", "LS002",
@@ -212,16 +207,15 @@
                 },
                 //编辑界面数据
                 editForm: {
-                    testId:'',
-                                        testObj:'',
-                                        sampNum:0,
-                                        sampIds:'',
-                                        testStart:'',
-                                        testEnd:'',
-                                        testEqp:'',
-                                        testPpl:'',
-                                        testLoc:'',
-                                        testConcl:''
+                      testId:'',
+                      testObj:'',
+                      sampleList:'',
+                      testStart:'',
+                      testEnd:'',
+                      testLocation:'',
+                      testAttachment:'',
+                      testPeopleList:'',
+                      platformList:''
                 },
 
                 addFormVisible: false,//新增界面是否显示
@@ -235,14 +229,13 @@
                 addForm: {
                     testId:'',
                     testObj:'',
-                    sampNum:0,
-                    sampIds:'',
+                    sampleList:'',
                     testStart:'',
                     testEnd:'',
-                    testEqp:'',
-                    testPpl:'',
-                    testLoc:'',
-                    testConcl:''
+                    testLocation:'',
+                    testAttachment:'',
+                    testPeopleList:'',
+                    platformList:''
                 }
 
 
@@ -269,14 +262,15 @@
                 //NProgress.start();
                 api.getMainTest(para)
                     .then((res) => {
-                        this.total = res.data.length;
-                        this.mainTest = res.data;
+                        this.total = res.data.total;
+                        this.mainTest = res.data.body;
                         this.listLoading = false;
                         //NProgress.done();
                     })
                     .catch((error) => {
-
+                        common.handleNWException(err);
                     });
+
             },
             //删除
             handleDel: function (index, row) {
@@ -310,15 +304,14 @@
                 this.addForm = {
                      testId:'',
                      testObj:'',
-                     sampNum:0,
-                     sampIds:'',
+                     platformList:'',
                      testStart:'',
                      testEnd:'',
-                     testEqp:'',
-                     testPpl:'',
-                     testLoc:'',
-                     testConcl:''
-                };
+                     testPeopleList:'',
+                     testLocation:'',
+                     testAttachment:'',
+                     sampleList:''
+                 };
             },
             //编辑
             editSubmit: function () {
@@ -355,7 +348,7 @@
                             para.testStart = (!para.testStart || para.testStart == '') ? '' : util.formatDate.format(new Date(para.testStart), 'yyyy-MM-dd');
                             para.testEnd = (!para.testEnd || para.testEnd == '') ? '' : util.formatDate.format(new Date(para.testEnd), 'yyyy-MM-dd');
 
-                            addUser(para).then((res) => {
+                            api.addExp(para).then((res) => {
                                 this.addLoading = false;
                                 //NProgress.done();
                                 this.$message({

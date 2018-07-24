@@ -14,9 +14,9 @@ public class MainTestVo extends BaseMongoDbVo{
 
     private String testId;
     private String testObj;
-    private List<String> platformList;
-    private List<String> testPeopleList;
-    private List<String> sampleList;
+    private String platformList;
+    private String testPeopleList;
+    private String sampleList;
     private String testLocation;
     private String testAttachment;
     private Long testStart;
